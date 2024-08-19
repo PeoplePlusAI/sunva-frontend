@@ -1,0 +1,94 @@
+.record-btn {
+    position: relative;
+    background: #b2ffda;
+    /*outline: 10px solid rgba(178, 255, 218, 0.3);*/
+}
+
+.record-btn:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(178, 255, 218, 0.3);
+    border-radius: 100%;
+    scale: 1.5;
+    z-index: 10;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(0.9);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(0.9);
+    }
+}
+
+.record-btn.recording {
+    background: #ffcac1;
+
+}
+
+.record-btn.recording:after {
+    background: rgb(255, 202, 193, 0.3);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.message-1 {
+    background: #E5F7FF;
+}
+
+.message-1 label {
+    color: #00B1FF;
+}
+
+.message-2 {
+    background: #EFFFF3;
+}
+
+.message-2 label {
+    color: #259641;
+}
+
+.message-box {
+    @apply p-4 rounded-xl overflow-hidden h-fit;
+}
+
+.message-box:nth-child(odd) {
+    @apply message-1;
+}
+
+.message-box:nth-child(even) {
+    @apply message-2;
+}
+
+.message-box p {
+    overflow: auto; /* or visible */
+    text-overflow: ellipsis; /* optional for truncating long text */
+    white-space: normal; /* allows wrapping of text */
+}
+
+.summarize {
+    position: relative;
+}
+
+.summarize::after {
+    content: 'Summarized';
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #00956b;
+    color: white;
+    border-radius: 0 0 0 5px;
+    padding: 1px 10px;
+    font-size: 13px;
+}
+
+.view-og-btn {
+
+    @apply rounded-full px-2 py-1 text-sm;
+    background: #DADADA;
+}
