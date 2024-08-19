@@ -1,0 +1,91 @@
+/*! keyboard-css v1.2.4 | (c) 2020  | MIT License | https://github.com/shhdharmen/keyboard-css.git */
+.kbc-button {
+    font-size: inherit;
+    line-height: inherit;
+    margin: .25rem .25rem .4375rem;
+    padding: .1rem .4rem;
+    box-shadow: 0 0 #d9d9d9, 0 0 #d9d9d9, 0 1px #d9d9d9, 0 2px #d9d9d9, 0 3px #d9d9d9, 0 4px #d9d9d9, 0 5px #d9d9d9, 2px 2.5px 4px #adb5bd, 0 -1px 2.5px #adb5bd;
+    background-color: #fff;
+    color: #343a40;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border: 1px solid #e6e6e6;
+    border-radius: .25rem;
+    display: inline-block;
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+    font-weight: 400;
+    text-align: left;
+    transform: translateZ(5px);
+    transform-style: preserve-3d;
+    transition: all .2s cubic-bezier(.2, 1, .2, 1)
+}
+
+.kbc-button:after {
+    border-radius: .5rem;
+    border-width: .125rem;
+    bottom: -9px;
+    left: -.3125rem;
+    right: -.3125rem;
+    top: -3px;
+    transform: translateZ(-3px);
+    border-color: #ccc
+}
+
+.kbc-button-lg.kbc-button-dark:after {
+    border-color: #626d78
+}
+
+.kbc-button.no-container:after {
+    border-color: transparent
+}
+
+.kbc-button:after {
+    border-style: solid;
+    box-sizing: content-box;
+    content: "";
+    display: block;
+    position: absolute;
+    transform-style: preserve-3d;
+    transition: all .25s cubic-bezier(.2, 1, .2, 1)
+}
+
+button.kbc-button {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: .375rem .375rem .6875rem;
+    padding: .375rem .75rem;
+    box-shadow: 0 0 #d9d9d9, 0 0 #d9d9d9, 0 1px #d9d9d9, 0 2px #d9d9d9, 0 3px #d9d9d9, 0 4px #d9d9d9, 0 5px #d9d9d9, 2px 2.5px 4px #adb5bd, 0 -1px 2.5px #adb5bd;
+    background-color: #fff;
+    border-color: #e6e6e6;
+    color: #343a40;
+    cursor: pointer;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji
+}
+
+button.kbc-button.focus, button.kbc-button.hover, button.kbc-button:focus, button.kbc-button:hover {
+    transform: translate3d(0, 1px, 5px)
+}
+
+button.kbc-button.focus:after, button.kbc-button.hover:after, button.kbc-button:focus:after, button.kbc-button:hover:after {
+    transform: translate3d(0, -1px, -5px)
+}
+
+button.kbc-button.active, button.kbc-button:active {
+    border-color: transparent;
+    box-shadow: none;
+    transform: translate3d(0, 5px, 0)
+}
+
+button.kbc-button.active:after, button.kbc-button:active:after {
+    transform: translate3d(0, -5px, 0)
+}
+
+button.kbc-button:after {
+    border-radius: .5rem;
+    border-width: .125rem;
+    bottom: -10px;
+    left: -.3125rem;
+    right: -.3125rem;
+    top: 0;
+    transform: translateZ(-5px)
+}

@@ -1,0 +1,24 @@
+.keyboard-cont {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    @apply px-2 pb-2;
+}
+
+.keyboard-cont .keys {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1px 0;
+}
+
+.keyboard-cont .keys .value {
+    font-size: 24px;
+}
+
+.keyboard-cont .keys .subvalues {
+    opacity: 0.5;
+    margin-left: 5px;
+    margin-top: 5px;
+}
