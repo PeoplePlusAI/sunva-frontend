@@ -10,22 +10,28 @@ import {
     TrashIcon,
     UpAndDownArrow
 } from "@/app/components/Icons";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import MessagesList from "@/app/components/MessageList";
 import {Dialog} from "@/app/components/Alerts";
 import Link from "next/link";
-import {useSunvaAI} from "@/app/home/useSunvaAI";
+import useSunvaAI from "@/app/home/useSunvaAI";
 import {toast} from "sonner";
 import {STORE_NAME} from "@/data/main";
-import TtsSection from "@/app/components/TTS/TtsSection";
 
 
 export default function Home() {
     const [isRecording, setIsRecording] = useState(false);
     const [isDelOpen, setIsDelOpen] = useState(false);
     const [isSaveOpen, setIsSaveOpen] = useState(false);
-    const [messages, handleRecord] = useSunvaAI();
+    const {messages, handleRecord, isActive} = useSunvaAI();
     const saveNameRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (!isActive) {
+            // toast.error("Connection closed");
+            setIsRecording(true);
+        }
+    }, [isActive]);
 
     return <main className="accessibility flex justify-between flex-col w-full h-full px-4 pt-3 pb-4">
         <div className="w-full h-[40px] flex items-center">
@@ -35,8 +41,6 @@ export default function Home() {
             <div className="text-center w-[calc(100%-48px)]">English</div>
         </div>
         <MessagesList messages={messages}/>
-
-        <TtsSection/>
 
         <div className="px-5 h-[75px] py-1 bg-white shadow flex rounded-3xl gap-7 justify-evenly items-center">
             <SettingsIcon/>
@@ -50,7 +54,9 @@ export default function Home() {
             >
                 {isRecording ? <StopIcon/> : <MicroPhoneIcon/>}
             </button>
-            <KeyboardIcon/>
+            <Link href="home/tts">
+                <KeyboardIcon/>
+            </Link>
             <UpAndDownArrow/>
         </div>
 

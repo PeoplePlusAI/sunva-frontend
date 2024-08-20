@@ -28,8 +28,6 @@ function Keyboard({text, setText, handleKeyPress, mode, changeMode, cursor, setC
     cursor: number,
     setCursor: StateSetter<number>,
 }) {
-
-
     return <div className="keyboard-cont w-full h-fit">
         <button className="keys" onClick={() => {
             if (cursor > 0)
@@ -69,11 +67,9 @@ function Keyboard({text, setText, handleKeyPress, mode, changeMode, cursor, setC
         <button className="keys" onClick={() => {
             if (mode != '123') {
                 setText((prevState) => insertAtPos(prevState, cursor, ' '));
-                //prevState.slice(0, cursor) + ' ' + prevState.slice(cursor));
                 setCursor((prevState) => prevState + 1);
             } else {
                 setText((prevState) => insertAtPos(prevState, cursor, '0'));
-                //prevState.slice(0, cursor) + '0' + prevState.slice(cursor));
                 setCursor((prevState) => prevState + 1);
             }
         }}>
@@ -84,7 +80,7 @@ function Keyboard({text, setText, handleKeyPress, mode, changeMode, cursor, setC
             if (mode != '123') {
                 changeMode();
             } else {
-                setText((prevState) => insertAtPos(prevState, cursor, '#'));//prevState.slice(0, cursor) + '#' + prevState.slice(cursor));
+                setText((prevState) => insertAtPos(prevState, cursor, '#'));
                 setCursor((prevState) => prevState + 1);
             }
         }}>

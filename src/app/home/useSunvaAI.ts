@@ -65,10 +65,14 @@ async function sendAudioChunks() {
     }
 }
 
-function startTranscriptionAndProcessing(setMessages: StateSetter<TMessage[]>) {
+function startTranscriptionAndProcessing(
+    setMessages: StateSetter<TMessage[]>,
+    setIsActive: StateSetter<boolean>
+) {
     transcribeAndProcessSocket = new WebSocket("ws://localhost:8000/v1/ws/transcription");
 
     transcribeAndProcessSocket.onopen = () => {
+        setIsActive(true);
         console.log('Transcription and Processing WebSocket connected');
         startRecording();
     };
@@ -86,6 +90,7 @@ function startTranscriptionAndProcessing(setMessages: StateSetter<TMessage[]>) {
     };
 
     transcribeAndProcessSocket.onclose = () => {
+        setIsActive(false);
         console.log('Transcription and Processing WebSocket disconnected');
         stopRecording();
     };
@@ -99,16 +104,23 @@ function stopTranscriptionAndProcessing() {
 }
 
 
-export function useSunvaAI() {
+export default function useSunvaAI() {
+    const [isActive, setIsActive] = useState(true);
     const [messages, setMessages] = useState<TMessage[]>([]);
 
     function handleRecord(isRecording: boolean) {
         if (isRecording) {
+            setIsActive(false);
             stopTranscriptionAndProcessing();
         } else {
-            startTranscriptionAndProcessing(setMessages);
+            startTranscriptionAndProcessing(setMessages, setIsActive);
         }
     }
 
-    return [messages, handleRecord] as [TMessage[], (isRecording: boolean) => void];
+    return {
+        messages,
+        handleRecord,
+        isActive
+    }
+    // return [messages, handleRecord] as [TMessage[], (isRecording: boolean) => void];
 }

@@ -5,7 +5,7 @@ let charIndex = 0;
 let lastTime = 0;
 let lastKey: string | null = null;
 
-export function keyPressFunc(
+export default function handleKeypad(
     key: string,
     mode: "abc" | "ABC" | "123",
     text: string,
