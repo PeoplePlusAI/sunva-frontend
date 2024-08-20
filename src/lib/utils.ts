@@ -14,3 +14,13 @@ export function formatTime(time: number) {
 
     return `${day}-${month}-${year}`;
 }
+
+const tempDiv = document.createElement('div');
+/**
+ * Takes a string and sanitizes it (Uses the inbuilt html sanitizer)
+ * @param str
+ */
+export function sanitizeHTML(str: string) {
+    tempDiv.textContent = str;
+    return tempDiv.innerHTML;
+}

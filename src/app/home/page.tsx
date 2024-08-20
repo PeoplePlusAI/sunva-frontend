@@ -17,7 +17,7 @@ import Link from "next/link";
 import {useSunvaAI} from "@/app/home/useSunvaAI";
 import {toast} from "sonner";
 import {STORE_NAME} from "@/data/main";
-import TtsSection from "@/app/components/TtsSection";
+import TtsSection from "@/app/components/TTS/TtsSection";
 
 
 export default function Home() {
