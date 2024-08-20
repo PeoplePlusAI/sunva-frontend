@@ -1,7 +1,7 @@
 "use client";
 
 import {useState} from "react";
-import Login from "@/app/components/Login";
+import Login from "@/app/components/login/Login";
 import SelectLanguage from "@/app/components/SelectLanguage";
 import TextSize from "@/app/components/TextSize";
 import {StateSetter, TPages} from "@/lib/types";
