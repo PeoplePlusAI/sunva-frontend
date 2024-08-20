@@ -1,4 +1,4 @@
-export type TPages = 0 | 1 | 2;
+export type TPages = "0" | "1" | "2";
 
 export type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 

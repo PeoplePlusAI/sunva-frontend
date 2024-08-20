@@ -1,7 +1,7 @@
 import "./login.css";
 import {useState} from "react";
 import {toast} from "sonner";
-import {StateSetter, TPages} from "@/lib/types";
+import {TPages} from "@/lib/types";
 
 function HideEye() {
     return <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="#000000" viewBox="0 0 256 256">
@@ -17,7 +17,7 @@ function ViewEye() {
     </svg>
 }
 
-export default function Login({pageSetter}: { pageSetter: StateSetter<TPages> }) {
+export default function Login({pageSetter}: { pageSetter: (val: TPages) => void}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [hidePass, setHidePass] = useState(true);
@@ -55,7 +55,7 @@ export default function Login({pageSetter}: { pageSetter: StateSetter<TPages> })
                 if (!email || !password) {
                     toast.error("Please enter email and password");
                 } else {
-                    pageSetter(1);
+                    pageSetter("1");
                 }
 
             }}>Login

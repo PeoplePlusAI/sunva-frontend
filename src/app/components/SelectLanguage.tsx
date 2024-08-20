@@ -8,11 +8,11 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import {useState} from "react";
-import {StateSetter, TPages} from "@/lib/types";
+import {TPages} from "@/lib/types";
 
 
 
-export default function SelectLanguage({pageSetter} : {pageSetter: StateSetter<TPages>}) {
+export default function SelectLanguage({pageSetter} : {pageSetter: (val: TPages) => void}) {
     const [lang, setLang] = useState("english");
 
     return <section className="page flex items-center justify-between flex-col">
@@ -36,7 +36,7 @@ export default function SelectLanguage({pageSetter} : {pageSetter: StateSetter<T
 
         </div>
         <button className="btn-primary w-full" onClick={() => {
-            pageSetter(2);
+            pageSetter("2");
         }}>
             Continue
         </button>
