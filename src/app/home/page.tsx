@@ -17,7 +17,7 @@ import Link from "next/link";
 import {useSunvaAI} from "@/app/home/useSunvaAI";
 import {toast} from "sonner";
 import {STORE_NAME} from "@/data/main";
-import Keyboard from "@/app/components/keyboard/Keyboard";
+import TtsSection from "@/app/components/TtsSection";
 
 
 export default function Home() {
@@ -36,7 +36,7 @@ export default function Home() {
         </div>
         <MessagesList messages={messages}/>
 
-        <Keyboard/>
+        <TtsSection/>
 
         <div className="px-5 h-[75px] py-1 bg-white shadow flex rounded-3xl gap-7 justify-evenly items-center">
             <SettingsIcon/>

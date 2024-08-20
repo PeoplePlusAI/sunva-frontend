@@ -1,4 +1,3 @@
-"use client";
 import "./login.css";
 import {useState} from "react";
 import {toast} from "sonner";
