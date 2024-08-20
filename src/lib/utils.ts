@@ -15,12 +15,12 @@ export function formatTime(time: number) {
     return `${day}-${month}-${year}`;
 }
 
-const tempDiv = document.createElement('div');
 /**
  * Takes a string and sanitizes it (Uses the inbuilt html sanitizer)
  * @param str
  */
 export function sanitizeHTML(str: string) {
+    const tempDiv = document.createElement('div');
     tempDiv.textContent = str;
     return tempDiv.innerHTML;
 }
@@ -32,5 +32,5 @@ export function sanitizeHTML(str: string) {
  * @param substr The string to insert
  */
 export function insertAtPos(str: string, index: number, substr: string) {
-  return str.slice(0, index) + substr + str.slice(index);
+    return str.slice(0, index) + substr + str.slice(index);
 }

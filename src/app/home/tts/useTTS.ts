@@ -46,7 +46,8 @@ export default function useTTS(text: string, setText: StateSetter<string>, setCu
         const buffer = sentences.slice(0, -1).join('.') + text.match(sentenceEndings)?.slice(0, -1).join('');
         console.log("Sending TTS text:", buffer);
         sendTtsText(buffer);
-        setText(sentences[sentences.length - 1]);
-        setCursor(text.length - 1);
+        let currText = sentences[sentences.length - 1];
+        setText(currText);
+        setCursor(currText.length - 1 < 0 ? 0 : currText.length - 1);
     }
 }
