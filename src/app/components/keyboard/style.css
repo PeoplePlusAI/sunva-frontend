@@ -6,7 +6,7 @@
     @apply px-2 pb-2;
 }
 
-.keyboard-cont .keys {
+.keys {
     display: flex;
     align-items: center;
     justify-content: center;

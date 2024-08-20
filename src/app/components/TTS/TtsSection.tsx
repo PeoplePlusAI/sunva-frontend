@@ -1,5 +1,5 @@
 import "./style.css"
-import {CaretDownIcon} from "@/app/components/Icons";
+import {CaretDownIcon, SwapIcon} from "@/app/components/Icons";
 import {useRef, useState} from "react";
 import {TInputModes} from "@/lib/types";
 import {keyPressFunc} from "@/app/components/keyboard/keyPressFunc";
@@ -39,10 +39,11 @@ export default function TtsSection() {
     return <div className="fixed inset-0 bg-brand-bg z-20 flex flex-col">
         <div className="flex-1 w-full p-4 text-display" ref={displayRef}></div>
 
-        <div className="h-[40px] w-full border-t-2 flex items-center justify-between px-4">
+        <div className="h-[40px] w-full border-t-2 flex items-center justify-between px-2">
             <CaretDownIcon size={24}/>
-            <button onClick={cycleMode}>
-                {mode}
+            <button onClick={cycleMode} className="flex items-center gap-1 bg-white rounded-md px-2 border-[1px] border-[#e6e6e6]">
+                <SwapIcon size={18}/>
+                <span className="w-[40px]">{mode}</span>
             </button>
         </div>
         <Keyboard
@@ -50,6 +51,7 @@ export default function TtsSection() {
             setText={setText}
             handleKeyPress={handleKeyPress}
             mode={mode}
+            changeMode={cycleMode}
             cursor={cursor}
             setCursor={setCursor}
         />

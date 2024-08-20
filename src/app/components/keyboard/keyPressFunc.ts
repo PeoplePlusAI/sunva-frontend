@@ -1,4 +1,5 @@
 import {StateSetter, TKeyboardKeys} from "@/lib/types";
+import {insertAtPos} from "@/lib/utils";
 
 let charIndex = 0;
 let lastTime = 0;
@@ -16,7 +17,7 @@ export function keyPressFunc(
     switch (mode) {
         case "123":
             setCursor((prevState) => prevState + 1);
-            setText((prevState) => prevState + key);
+            setText((prevState) => insertAtPos(prevState, cursor, key));
             break;
         case "abc":
         case "ABC":
@@ -28,22 +29,23 @@ export function keyPressFunc(
                 charIndex = 0;
             }
 
-            const substr = sameKey ?
-                ((Date.now() - lastTime < 1000) ? text.slice(0, -1) : text) :
-                text;
+            const textStart = text.slice(0, cursor);
 
-            const newText = substr + keyboardKeys[key][sameKey ? charIndex : 0];
+            const substr = sameKey ?
+                ((Date.now() - lastTime < 1000) ? textStart.slice(0, -1) : textStart) :
+                textStart;
+
+            const insertedVal = keyboardKeys[key][sameKey ? charIndex : 0]
+
+            const newText = substr + (mode === 'ABC' ? insertedVal.toUpperCase() : insertedVal) + text.slice(cursor);
 
             console.log(cursor)
 
             setText(newText);
 
             if (!sameKey) {
-                console.log("Updated")
                 setCursor((prevState) => prevState + 1);
             } else if(Date.now() - lastTime > 1000) {
-                console.log("Else")
-
                 setCursor((prevState) => prevState + 1);
             }
 

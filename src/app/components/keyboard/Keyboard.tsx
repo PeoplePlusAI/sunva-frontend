@@ -2,9 +2,10 @@ import "./style.css"
 import {StateSetter, TInputModes, TKeyboardKeys} from "@/lib/types";
 import {BackspaceIcon, CaretLeftIcon, CaretRightIcon} from "@/app/components/Icons";
 import {memo} from "react";
+import {insertAtPos} from "@/lib/utils";
 
 export const keyboardKeys: TKeyboardKeys = {
-    '1': ['.', ','],
+    '1': ['.', ',', '?'],
     '2': ['a', 'b', 'c'],
     '3': ['d', 'e', 'f'],
     '4': ['g', 'h', 'i'],
@@ -17,11 +18,13 @@ export const keyboardKeys: TKeyboardKeys = {
 
 const keyboard_keys = Object.keys(keyboardKeys);
 
-function Keyboard({text, setText, handleKeyPress, mode, cursor, setCursor}: {
+
+function Keyboard({text, setText, handleKeyPress, mode, changeMode, cursor, setCursor}: {
     text: string,
     setText: StateSetter<string>,
     handleKeyPress: (key: string) => void,
     mode: TInputModes,
+    changeMode: () => void
     cursor: number,
     setCursor: StateSetter<number>,
 }) {
@@ -29,11 +32,8 @@ function Keyboard({text, setText, handleKeyPress, mode, cursor, setCursor}: {
 
     return <div className="keyboard-cont w-full h-fit">
         <button className="keys" onClick={() => {
-            console.log(cursor, "condition: ", cursor > 0)
             if (cursor > 0)
                 setCursor((prevState) => prevState - 1);
-            console.log("After: ", cursor)
-
         }}>
             <CaretLeftIcon/>
         </button>
@@ -44,7 +44,7 @@ function Keyboard({text, setText, handleKeyPress, mode, cursor, setCursor}: {
             <CaretRightIcon/>
         </button>
         <button className="keys" onClick={() => {
-            setText(text.slice(0, -1));
+            setText(text.substring(0, cursor - 1) + text.substring(cursor));
             if (cursor !== 0)
                 setCursor((prevState) => prevState - 1);
         }}>
@@ -68,18 +68,26 @@ function Keyboard({text, setText, handleKeyPress, mode, cursor, setCursor}: {
         </button>
         <button className="keys" onClick={() => {
             if (mode != '123') {
-                setText((prevState) => prevState + ' ');
+                setText((prevState) => insertAtPos(prevState, cursor, ' '));
+                //prevState.slice(0, cursor) + ' ' + prevState.slice(cursor));
                 setCursor((prevState) => prevState + 1);
             } else {
-                setText((prevState) => prevState + '0');
+                setText((prevState) => insertAtPos(prevState, cursor, '0'));
+                //prevState.slice(0, cursor) + '0' + prevState.slice(cursor));
                 setCursor((prevState) => prevState + 1);
             }
-
         }}>
             <span className="value">0</span>
             <span className="subvalues">⎵</span>
         </button>
-        <button className="keys">
+        <button className="keys" onClick={() => {
+            if (mode != '123') {
+                changeMode();
+            } else {
+                setText((prevState) => insertAtPos(prevState, cursor, '#'));//prevState.slice(0, cursor) + '#' + prevState.slice(cursor));
+                setCursor((prevState) => prevState + 1);
+            }
+        }}>
             <span className="value">#</span>
             <span className="subvalues"></span>
         </button>
