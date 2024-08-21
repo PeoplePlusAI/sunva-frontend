@@ -92,3 +92,22 @@
     @apply rounded-full px-2 py-1 text-sm;
     background: #DADADA;
 }
+
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+}
+
+.status-indicator.active {
+    background: #37CC1A;
+    background: radial-gradient(at center, #37CC1A, #12a800);
+    box-shadow: 1px 0 3px #37CC1A, -1px 0 3px #37CC1A;
+}
+
+.status-indicator.inactive {
+    background: #F60101;
+    background: radial-gradient(at center, #F60101, #A10101);
+    box-shadow: 1px 0 3px #A10101, -1px 0 3px #A10101;
+}

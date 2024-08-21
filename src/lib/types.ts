@@ -11,3 +11,5 @@ export type TMessage = {
 export type TInputModes = 'abc' | 'ABC' | '123';
 
 export type TKeyboardKeys = { [key: string]: string[] };
+
+export type TServerStates = "active" | "inactive";

@@ -10,7 +10,7 @@ import {
     TrashIcon,
     UpAndDownArrow
 } from "@/components/Icons";
-import {useEffect, useRef, useState} from "react";
+import {useRef, useState} from "react";
 import MessagesList from "@/components/MessageList";
 import {Dialog} from "@/components/Alerts";
 import Link from "next/link";
@@ -20,25 +20,22 @@ import {STORE_NAME} from "@/data/main";
 
 
 export default function Home() {
-    const [isRecording, setIsRecording] = useState(false);
     const [isDelOpen, setIsDelOpen] = useState(false);
     const [isSaveOpen, setIsSaveOpen] = useState(false);
-    const {messages, handleRecord, isActive} = useSunvaAI();
+    const {messages, handleRecord, isRecording, setIsRecording, isActive} = useSunvaAI();
     const saveNameRef = useRef<HTMLInputElement>(null);
 
-    useEffect(() => {
-        if (!isActive) {
-            // toast.error("Connection closed");
-            setIsRecording(true);
-        }
-    }, [isActive]);
-
     return <main className="accessibility flex justify-between flex-col w-full h-full px-4 pt-3 pb-4">
-        <div className="w-full h-[40px] flex items-center">
+        <div className="w-full h-[40px] flex items-center justify-between">
             <Link href="/home/saved" className="w-[24px]">
                 <NoteIcon/>
             </Link>
-            <div className="text-center w-[calc(100%-48px)]">English</div>
+            <h1 className="ml-[50px]">English</h1>
+            <div
+                className="w-[90px] flex items-center justify-center gap-2 rounded-full border-[1px] border-[#e6e6e6] px-2 text-sm text-black text-opacity-60">
+                <div className={`status-indicator ${isActive}`}></div>
+                {isActive}
+            </div>
         </div>
         <MessagesList messages={messages}/>
 
@@ -48,13 +45,13 @@ export default function Home() {
             <button
                 className={`h-[65%] aspect-square rounded-full flex items-center justify-center record-btn ${isRecording ? 'recording' : ''}`}
                 onClick={() => {
-                    handleRecord(isRecording);
+                    handleRecord(!isRecording);
                     setIsRecording(!isRecording);
                 }}
             >
                 {isRecording ? <StopIcon/> : <MicroPhoneIcon/>}
             </button>
-            <Link href="home/tts">
+            <Link href="/home/tts">
                 <KeyboardIcon/>
             </Link>
             <UpAndDownArrow/>
