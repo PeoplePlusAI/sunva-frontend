@@ -12,7 +12,8 @@ person while having the communication.
 1. To get started, clone the repository.
 2. Install the dependencies using `npm install` or `yarn install` or `pnpm install` or `bun install`
     > The project uses `pnpm` as the package manager, but any of them can be used.
-3. The to start the development server, run the following command:
+3. The backend URLs are configured in the [src/data/main.ts](src/data/main.ts), change accordingly
+4. The to start the development server, run the following command:
     ```bash
     npm run dev
     # or
@@ -22,6 +23,7 @@ person while having the communication.
     # or
     bun dev
     ```
-4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-5. To connect to the Sunva AI see https://github.com/PeoplePlusAI/sunva-ai
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. 
+
+The sunva-ai backend is available at https://github.com/PeoplePlusAI/sunva-ai
 

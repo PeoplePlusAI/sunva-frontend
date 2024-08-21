@@ -142,12 +142,20 @@ export default function useSunvaAI() {
             });
     }, []);
 
-    function handleRecord(isRecording: boolean) {
-        if (isRecording) {
-            startTranscriptionAndProcessing(setMessages, setIsRecording, setIsActive);
-        } else {
-            stopTranscriptionAndProcessing();
-        }
+    // function handleRecord(isRecording: boolean) {
+    //     if (isRecording) {
+    //         startTranscriptionAndProcessing(setMessages, setIsRecording, setIsActive);
+    //     } else {
+    //         stopTranscriptionAndProcessing();
+    //     }
+    // }
+
+    function startRecording() {
+        startTranscriptionAndProcessing(setMessages, setIsRecording, setIsActive);
+    }
+
+    function stopRecording() {
+        stopTranscriptionAndProcessing();
     }
 
     return {
@@ -156,6 +164,8 @@ export default function useSunvaAI() {
         isRecording,
         setIsRecording,
         messages,
-        handleRecord,
+        // handleRecord,
+        startRecording,
+        stopRecording
     }
 }

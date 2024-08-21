@@ -111,3 +111,19 @@
     background: radial-gradient(at center, #F60101, #A10101);
     box-shadow: 1px 0 3px #A10101, -1px 0 3px #A10101;
 }
+
+.window {
+    position: fixed;
+    inset: 0;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+.window-visible {
+    transform: translateY(0px);
+    opacity: 1;
+}
+
+.window-hidden {
+    transform: translateY(100%);
+    opacity: 0;
+}

@@ -1,29 +1,25 @@
-"use client";
-
 import "./style.css"
 import {CaretDownIcon, CaretLeftIcon, SwapIcon} from "@/components/Icons";
-import {useRef} from "react";
+import {memo, useRef} from "react";
 import Keyboard from "@/components/keyboard/Keyboard";
 import {sanitizeHTML} from "@/lib/utils";
-import {useKeypad} from "@/app/home/tts/useKeypad";
-import useTTS from "@/app/home/tts/useTTS";
-import Link from "next/link";
+import {useKeypad} from "@/components/tts/useKeypad";
+import useTTS from "@/components/tts/useTTS";
 
-
-export default function TTS() {
+function TTS({className, onClose}: {className?: string, onClose: () => void}) {
     const displayRef = useRef<HTMLParagraphElement>(null);
     const {mode, text, setText, cycleMode, handleKeyPress, cursor, setCursor} = useKeypad();
 
     useTTS(text, setText, setCursor);
 
     if (displayRef.current) {
-        const sanitizedText = sanitizeHTML(text)
+        const sanitizedText = sanitizeHTML(text);
         displayRef.current.innerHTML = `${sanitizedText.substring(0, cursor).replace(/ /g, '&nbsp;')}<span id="text-cursor"></span>${sanitizedText.substring(cursor).replace(/ /g, '&nbsp;')}`;
     }
 
-    return <main className="accessibility flex justify-between flex-col w-full h-full">
+    return <main className={`accessibility flex justify-between flex-col w-full h-full window bg-brand-bg z-30 ${className}`}>
         <div className="h-[44px] flex items-center">
-            <Link href="/home"><CaretLeftIcon/></Link>
+            <button onClick={onClose}><CaretLeftIcon/></button>
             <h1 className="text-2xl ml-3">TTS</h1>
         </div>
         <div className="flex-1 w-full p-4 text-display" ref={displayRef}></div>
@@ -47,3 +43,5 @@ export default function TTS() {
         />
     </main>
 }
+
+export default memo(TTS);

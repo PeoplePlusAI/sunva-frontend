@@ -10,20 +10,26 @@ import {
     TrashIcon,
     UpAndDownArrow
 } from "@/components/Icons";
-import {useRef, useState} from "react";
+import {useCallback, useRef, useState} from "react";
 import MessagesList from "@/components/MessageList";
 import {Dialog} from "@/components/Alerts";
 import Link from "next/link";
 import useSunvaAI from "@/app/home/useSunvaAI";
 import {toast} from "sonner";
 import {STORE_NAME} from "@/data/main";
+import TTS from "@/components/tts/TTS";
 
 
 export default function Home() {
     const [isDelOpen, setIsDelOpen] = useState(false);
     const [isSaveOpen, setIsSaveOpen] = useState(false);
-    const {messages, handleRecord, isRecording, setIsRecording, isActive} = useSunvaAI();
+    const {messages, isRecording, setIsRecording, isActive, startRecording, stopRecording} = useSunvaAI();
     const saveNameRef = useRef<HTMLInputElement>(null);
+    const [isTTSOpen, setIsTTSOpen] = useState(false);
+
+    const ttsClose = useCallback(() => {
+        setIsTTSOpen(false);
+    }, []);
 
     return <main className="accessibility flex justify-between flex-col w-full h-full px-4 pt-3 pb-4">
         <div className="w-full h-[40px] flex items-center justify-between">
@@ -45,17 +51,28 @@ export default function Home() {
             <button
                 className={`h-[65%] aspect-square rounded-full flex items-center justify-center record-btn ${isRecording ? 'recording' : ''}`}
                 onClick={() => {
-                    handleRecord(!isRecording);
-                    setIsRecording(!isRecording);
+                    setIsRecording((prev) => !prev);
+
+                    if (isRecording) {
+                        stopRecording();
+                    } else {
+                        startRecording();
+                    }
                 }}
             >
                 {isRecording ? <StopIcon/> : <MicroPhoneIcon/>}
             </button>
-            <Link href="/home/tts">
+            <button onClick={() => {
+                setIsTTSOpen(true);
+                setIsRecording(false);
+                stopRecording();
+            }}>
                 <KeyboardIcon/>
-            </Link>
+            </button>
             <UpAndDownArrow/>
         </div>
+
+        <TTS className={isTTSOpen ? 'window-visible' : 'window-hidden'} onClose={ttsClose}/>
 
         <Dialog
             title="Do you want to save this conversation?"
