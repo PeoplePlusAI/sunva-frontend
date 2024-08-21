@@ -1,6 +1,6 @@
 import "./style.css"
 import {StateSetter, TInputModes, TKeyboardKeys} from "@/lib/types";
-import {BackspaceIcon, CaretLeftIcon, CaretRightIcon} from "@/app/components/Icons";
+import {BackspaceIcon, CaretLeftIcon, CaretRightIcon} from "@/components/Icons";
 import {memo} from "react";
 import {insertAtPos} from "@/lib/utils";
 

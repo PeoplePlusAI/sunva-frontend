@@ -2,7 +2,7 @@
 
 import {useRouter} from "next/navigation";
 import {useState} from "react";
-import {NoteIcon} from "@/app/components/Icons";
+import {NoteIcon} from "@/components/Icons";
 import {formatTime} from "@/lib/utils";
 
 type TSaved = {
@@ -13,7 +13,7 @@ type TSaved = {
 
 export default function Chats() {
     const router = useRouter();
-    const [saved, setSaved] = useState<TSaved[]>([
+    const [saved] = useState<TSaved[]>([
         {
             ID: 112,
             title: "Conversation 1",

@@ -9,10 +9,10 @@ import {
     StopIcon,
     TrashIcon,
     UpAndDownArrow
-} from "@/app/components/Icons";
+} from "@/components/Icons";
 import {useEffect, useRef, useState} from "react";
-import MessagesList from "@/app/components/MessageList";
-import {Dialog} from "@/app/components/Alerts";
+import MessagesList from "@/components/MessageList";
+import {Dialog} from "@/components/Alerts";
 import Link from "next/link";
 import useSunvaAI from "@/app/home/useSunvaAI";
 import {toast} from "sonner";

@@ -1,9 +1,9 @@
 "use client";
 
 import "./style.css"
-import {CaretDownIcon, CaretLeftIcon, SwapIcon} from "@/app/components/Icons";
+import {CaretDownIcon, CaretLeftIcon, SwapIcon} from "@/components/Icons";
 import {useRef} from "react";
-import Keyboard from "@/app/components/keyboard/Keyboard";
+import Keyboard from "@/components/keyboard/Keyboard";
 import {sanitizeHTML} from "@/lib/utils";
 import {useKeypad} from "@/app/home/tts/useKeypad";
 import useTTS from "@/app/home/tts/useTTS";

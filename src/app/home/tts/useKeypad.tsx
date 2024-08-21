@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {TInputModes} from "@/lib/types";
-import {keyboardKeys} from "@/app/components/keyboard/Keyboard";
-import handleKeypad from "@/app/components/keyboard/handleKeypad";
+import {keyboardKeys} from "@/components/keyboard/Keyboard";
+import handleKeypad from "@/components/keyboard/handleKeypad";
 
 export function useKeypad() {
     const [mode, setMode] = useState<TInputModes>('abc');

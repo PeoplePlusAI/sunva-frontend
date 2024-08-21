@@ -1,9 +1,9 @@
 "use client";
 
 import {useCallback} from "react";
-import Login from "@/app/components/login/Login";
-import SelectLanguage from "@/app/components/SelectLanguage";
-import TextSize from "@/app/components/TextSize";
+import Login from "@/components/login/Login";
+import SelectLanguage from "@/components/SelectLanguage";
+import TextSize from "@/components/TextSize";
 import {TPages} from "@/lib/types";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 
