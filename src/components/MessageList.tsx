@@ -16,7 +16,7 @@ function Message({item}: { item: TMessage }) {
             <label className={`font-bold block`}>{item.name}</label>
             <p className="h-auto">
                 {item.summarized ?
-                    (showOriginal ? item.summarized : item.message) :
+                    (showOriginal ? item.message : item.summarized) :
                     item.message
                 }
             </p>
