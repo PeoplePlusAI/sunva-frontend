@@ -55,4 +55,10 @@ export default function useTTS(text: string, setText: StateSetter<string>, setCu
         setText(currText);
         setCursor(currText.length - 1 < 0 ? 0 : currText.length - 1);
     }
+
+    return {
+        sendText: (text: string) => {
+            sendTtsText(text);
+        }
+    }
 }
