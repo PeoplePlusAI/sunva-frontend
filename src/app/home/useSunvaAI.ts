@@ -93,27 +93,6 @@ function startTranscriptionAndProcessing(
             const data = JSON.parse(event.data) as IServerRes;
             console.log(data);
 
-            // setMessages((prevState) => {
-            //     let index = -1;
-            //     console.log("\nStarting loop")
-            //     for(let i = 0; i < prevState.length; i++) {
-            //         console.log(prevState[i])
-            //         if(prevState[i].id === data.message_id) {
-            //             index = i;
-            //             break;
-            //         }
-            //     }
-            //     console.log("Ending loop\n")
-            //
-            //     console.log("Index =", index, "is existing:", index !== -1, "ID:", data.message_id);
-            //
-            //     return [...prevState, {
-            //         message: data.text,
-            //         id: data.message_id,
-            //         name: "Person 1"
-            //     }]
-            // })
-
             if (data.type === "transcription") {
                 setMessages((prevState) => {
                     let temp = [...prevState];
