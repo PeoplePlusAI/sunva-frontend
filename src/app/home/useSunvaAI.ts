@@ -135,7 +135,7 @@ function startTranscriptionAndProcessing(
                     }
 
                     temp[index].summarized = '';
-                    temp[index].message += data.text;
+                    temp[index].message += ' ' + data.text;
                     return temp;
                 })
             }
