@@ -6,6 +6,7 @@ export type TMessage = {
     name: string;
     message: string;
     summarized?: string;
+    id: string
 }
 
 export type TInputModes = 'abc' | 'ABC' | '123';

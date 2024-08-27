@@ -13,9 +13,9 @@ let isSending = false;
 
 async function startRecording(setRecording: StateSetter<boolean>, setIsActive: StateSetter<TServerStates>) {
     try {
-        console.log('Starting recording...');
+        // console.log('Starting recording...');
         const stream = await navigator.mediaDevices.getUserMedia({audio: true});
-        console.log('Microphone access granted');
+        // console.log('Microphone access granted');
 
         recorder = new RecordRTC(stream, {
             type: 'audio',
@@ -34,7 +34,7 @@ async function startRecording(setRecording: StateSetter<boolean>, setIsActive: S
 
         setIsActive("active");
         recorder.startRecording();
-        console.log('Recording started');
+        // console.log('Recording started');
     } catch (error) {
         toast.error("Error accessing microphone");
         setRecording(false);
@@ -43,7 +43,7 @@ async function startRecording(setRecording: StateSetter<boolean>, setIsActive: S
 }
 
 function stopRecording() {
-    console.log('Stopping recording...');
+    // console.log('Stopping recording...');
     if (recorder && recorder.getState() !== 'inactive') {
         recorder.stopRecording(() => {
             sendAudioChunks();
@@ -60,14 +60,20 @@ async function sendAudioChunks() {
 
         const arrayBuffer = await audioBlob.arrayBuffer();
         const base64String = arrayBufferToBase64(arrayBuffer);
-        console.log('Sending audio data to server');
+        // console.log('Sending audio data to server');
         transcribeAndProcessSocket.send(JSON.stringify({audio: base64String}));
-        console.log('Sent audio data to server');
+        // console.log('Sent audio data to server');
         isSending = false;
         sendAudioChunks();  // Continue sending remaining chunks
     } else {
         console.log('No audio chunks to send');
     }
+}
+
+interface IServerRes {
+    type: "transcription" | "concise" | "highlight";
+    text: string;
+    message_id: string
 }
 
 function startTranscriptionAndProcessing(
@@ -84,15 +90,61 @@ function startTranscriptionAndProcessing(
         };
 
         transcribeAndProcessSocket.onmessage = (event) => {
-            const data = JSON.parse(event.data) as { transcription: string, processed_text: string };
+            const data = JSON.parse(event.data) as IServerRes;
             console.log(data);
-            if (data.transcription)
-                setMessages(prevState => [...prevState, {
-                    name: "Person 1",
-                    message: data.transcription,
-                    summarized: data.processed_text || ''
-                }]);
 
+            if (data.type === "transcription") {
+                setMessages((prevState) => {
+                    let temp = [...prevState];
+                    let index = -1;
+
+                    for (let i = 0; i < temp.length; i++) {
+                        if (temp[i].id === data.message_id) {
+                            index = i;
+                            break;
+                        }
+                    }
+
+                    if (index === -1) {
+                        return [...prevState, {
+                            name: "Person 1",
+                            message: data.text,
+                            id: data.message_id
+                        }]
+                    }
+
+                    temp[index].summarized = '';
+                    temp[index].message += ' ' + data.text;
+                    return temp;
+                })
+            }
+            else if (data.type === "concise" || data.type === "highlight") {
+                setMessages(prevState => {
+                    let temp = [...prevState];
+                    let index: number | null = null;
+
+                    for (let i = 0; i < temp.length; i++) {
+                        if (temp[i].id === data.message_id) {
+                            index = i;
+                            break;
+                        }
+                    }
+
+                    if (index !== null) {
+                        temp[index].summarized = data.text;
+                        return temp;
+                    }
+
+                    return [...prevState, {
+                        name: "Person 1",
+                        message: data.text,
+                        summarized: data.text,
+                        id: data.message_id
+                    }]
+                })
+            } else {
+                throw new Error("Undefined type found in the server response");
+            }
         };
 
         transcribeAndProcessSocket.onclose = (e) => {
@@ -111,7 +163,7 @@ function startTranscriptionAndProcessing(
             toast.error("Couldn't connect to the server");
         }
     } catch (e) {
-        console.log(e);
+        console.log("Error:", e);
         setIsRecording(false);
     }
 }
@@ -142,14 +194,6 @@ export default function useSunvaAI() {
             });
     }, []);
 
-    // function handleRecord(isRecording: boolean) {
-    //     if (isRecording) {
-    //         startTranscriptionAndProcessing(setMessages, setIsRecording, setIsActive);
-    //     } else {
-    //         stopTranscriptionAndProcessing();
-    //     }
-    // }
-
     function startRecording() {
         startTranscriptionAndProcessing(setMessages, setIsRecording, setIsActive);
     }
@@ -164,7 +208,6 @@ export default function useSunvaAI() {
         isRecording,
         setIsRecording,
         messages,
-        // handleRecord,
         startRecording,
         stopRecording
     }

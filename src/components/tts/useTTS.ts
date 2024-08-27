@@ -7,7 +7,9 @@ function sendTtsText(text: string) {
         ttsSocket = new WebSocket("ws://localhost:8000/v1/ws/speech");
         ttsSocket.onopen = () => {
             console.log("TTS WebSocket connected");
-            ttsSocket.send(text);
+            ttsSocket.send(JSON.stringify({
+                text
+            }));
         };
     } else {
         ttsSocket.send(text);
@@ -36,9 +38,12 @@ function playTtsAudio(audioBase64: any) {
         source.connect(audioContext.destination);
         source.start();
     });
+
+    console.log("Reached here");
 }
 
 export default function useTTS(text: string, setText: StateSetter<string>, setCursor: StateSetter<number>) {
+    // const []
     const sentenceEndings = /[.?!]/g;
     const sentences = text.split(sentenceEndings);
 
@@ -49,5 +54,11 @@ export default function useTTS(text: string, setText: StateSetter<string>, setCu
         let currText = sentences[sentences.length - 1];
         setText(currText);
         setCursor(currText.length - 1 < 0 ? 0 : currText.length - 1);
+    }
+
+    return {
+        sendText: (text: string) => {
+            sendTtsText(text);
+        }
     }
 }

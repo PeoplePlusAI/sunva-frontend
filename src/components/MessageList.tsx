@@ -14,12 +14,12 @@ function Message({item}: { item: TMessage }) {
             className={` ${showOriginal ? '' : 'summarize'} message-box`}
         >
             <label className={`font-bold block`}>{item.name}</label>
-            <p className="h-auto">
-                {item.summarized ?
-                    (showOriginal ? item.summarized : item.message) :
-                    item.message
-                }
-            </p>
+            <p className="h-auto" dangerouslySetInnerHTML={{
+                __html:
+                    item.summarized ?
+                        (showOriginal ? item.message : item.summarized) :
+                        item.message
+            }}></p>
         </div>
         {item.summarized &&
             <div className="relative w-full text-right h-3">
