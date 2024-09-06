@@ -112,9 +112,11 @@ function startTranscriptionAndProcessing(
                             id: data.message_id
                         }]
                     }
-
+                    
                     temp[index].summarized = '';
-                    temp[index].message += ' ' + data.text;
+                    if (!temp[index].message.includes(data.text)) {
+                        temp[index].message += ' ' + data.text.trim();
+                    }
                     return temp;
                 })
             }
