@@ -4,6 +4,7 @@ import RecordRTC from "recordrtc";
 import {arrayBufferToBase64} from "@/lib/sunva-ai";
 import {toast} from "sonner";
 import {BACKEND_URL, BACKEND_WS_URL} from "@/data/main";
+import {useLang} from "@/lib/context/langContext";
 
 let transcribeAndProcessSocket: WebSocket | null;
 let recorder: RecordRTC;
@@ -11,7 +12,7 @@ const audioQueue: Blob[] = [];
 let isSending = false;
 
 
-async function startRecording(setRecording: StateSetter<boolean>, setIsActive: StateSetter<TServerStates>) {
+async function startRecording(setRecording: StateSetter<boolean>, setIsActive: StateSetter<TServerStates>, lang: string) {
     console.group("Record Start")
     try {
         console.log('Starting recording...');
@@ -28,7 +29,7 @@ async function startRecording(setRecording: StateSetter<boolean>, setIsActive: S
             ondataavailable: (blob) => {
                 if (blob && blob.size > 0) {
                     audioQueue.push(blob);
-                    sendAudioChunks();
+                    sendAudioChunks(lang);
                 }
             },
         });
@@ -45,16 +46,16 @@ async function startRecording(setRecording: StateSetter<boolean>, setIsActive: S
     console.groupEnd();
 }
 
-function stopRecording() {
+function stopRecording(lang: string) {
     console.log('Stopping recording...');
     if (recorder && recorder.getState() !== 'inactive') {
         recorder.stopRecording(() => {
-            sendAudioChunks();
+            sendAudioChunks(lang);
         });
     }
 }
 
-async function sendAudioChunks() {
+async function sendAudioChunks(lang: string) {
     if (audioQueue.length > 0 && !isSending) {
         console.group("Send Audio");
 
@@ -65,11 +66,13 @@ async function sendAudioChunks() {
 
         const arrayBuffer = await audioBlob.arrayBuffer();
         const base64String = arrayBufferToBase64(arrayBuffer);
+        const data = JSON.stringify({audio: base64String, language: lang || 'en'});
         console.log('Sending audio data to server');
-        transcribeAndProcessSocket?.send(JSON.stringify({audio: base64String}));
+        console.log("Data Sent:", data);
+        transcribeAndProcessSocket?.send(data);
         console.log('Sent audio data to server');
         isSending = false;
-        sendAudioChunks();  // Continue sending remaining chunks
+        sendAudioChunks(lang);  // Continue sending remaining chunks
         console.groupEnd();
     } else {
         console.warn('No audio chunks to send');
@@ -85,17 +88,18 @@ interface IServerRes {
 function startTranscriptionAndProcessing(
     setMessages: StateSetter<TMessage[]>,
     setIsRecording: StateSetter<boolean>,
-    setIsActive: StateSetter<TServerStates>
+    setIsActive: StateSetter<TServerStates>,
+    lang: string
 ) {
     try {
-        if(transcribeAndProcessSocket)
+        if (transcribeAndProcessSocket)
             transcribeAndProcessSocket.close();
 
         transcribeAndProcessSocket = new WebSocket(`${BACKEND_WS_URL}/v1/ws/transcription`);
 
         transcribeAndProcessSocket.onopen = () => {
             console.log('Transcription and Processing WebSocket connected');
-            startRecording(setIsRecording, setIsActive);
+            startRecording(setIsRecording, setIsActive, lang);
         };
 
         transcribeAndProcessSocket.onmessage = (event) => {
@@ -152,7 +156,7 @@ function startTranscriptionAndProcessing(
                 toast.error("Connection to server closed unexpectedly");
             }
             console.log('Transcription and Processing WebSocket disconnected');
-            stopRecording();
+            stopRecording(lang);
             transcribeAndProcessSocket = null;
         };
 
@@ -170,23 +174,24 @@ function startTranscriptionAndProcessing(
     }
 }
 
-function stopTranscriptionAndProcessing() {
+function stopTranscriptionAndProcessing(lang: string) {
     if (transcribeAndProcessSocket) {
         transcribeAndProcessSocket.close();
         transcribeAndProcessSocket = null;
     }
-    stopRecording();
+    stopRecording(lang);
 }
 
 export default function useSunvaAI() {
     const [isActive, setIsActive] = useState<TServerStates>("active");
     const [isRecording, setIsRecording] = useState(false);
     const [messages, setMessages] = useState<TMessage[]>([]);
+    const [lang] = useLang();
 
     useEffect(() => {
         fetch(`${BACKEND_URL}/is-alive`, {
             headers: {},
-            mode: "no-cors",
+            mode: "no-cors"
         })
             .then(() => {
                 setIsActive("active");
@@ -198,11 +203,11 @@ export default function useSunvaAI() {
     }, []);
 
     function startRecording() {
-        startTranscriptionAndProcessing(setMessages, setIsRecording, setIsActive);
+        startTranscriptionAndProcessing(setMessages, setIsRecording, setIsActive, lang);
     }
 
     function stopRecording() {
-        stopTranscriptionAndProcessing();
+        stopTranscriptionAndProcessing(lang);
     }
 
     return {
