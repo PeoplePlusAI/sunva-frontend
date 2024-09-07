@@ -3,7 +3,6 @@ import {StateSetter, TMessage, TServerStates} from "@/lib/types";
 import RecordRTC from "recordrtc";
 import {arrayBufferToBase64} from "@/lib/sunva-ai";
 import {toast} from "sonner";
-import {BACKEND_URL, BACKEND_WS_URL} from "@/data/main";
 import {useLang} from "@/lib/context/langContext";
 
 let transcribeAndProcessSocket: WebSocket | null;
@@ -94,8 +93,7 @@ function startTranscriptionAndProcessing(
     try {
         if (transcribeAndProcessSocket)
             transcribeAndProcessSocket.close();
-
-        transcribeAndProcessSocket = new WebSocket(`${BACKEND_WS_URL}/v1/ws/transcription`);
+        transcribeAndProcessSocket = new WebSocket('/api/v1/ws/transcription');
 
         transcribeAndProcessSocket.onopen = () => {
             console.log('Transcription and Processing WebSocket connected');
@@ -189,7 +187,7 @@ export default function useSunvaAI() {
     const [lang] = useLang();
 
     useEffect(() => {
-        fetch(`${BACKEND_URL}/is-alive`, {
+        fetch(`api/is-alive`, {
             headers: {},
             mode: "no-cors"
         })
