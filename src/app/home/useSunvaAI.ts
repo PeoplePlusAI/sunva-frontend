@@ -5,17 +5,18 @@ import {arrayBufferToBase64} from "@/lib/sunva-ai";
 import {toast} from "sonner";
 import {BACKEND_URL, BACKEND_WS_URL} from "@/data/main";
 
-let transcribeAndProcessSocket: WebSocket;
+let transcribeAndProcessSocket: WebSocket | null;
 let recorder: RecordRTC;
 const audioQueue: Blob[] = [];
 let isSending = false;
 
 
 async function startRecording(setRecording: StateSetter<boolean>, setIsActive: StateSetter<TServerStates>) {
+    console.group("Record Start")
     try {
-        // console.log('Starting recording...');
+        console.log('Starting recording...');
         const stream = await navigator.mediaDevices.getUserMedia({audio: true});
-        // console.log('Microphone access granted');
+        console.log('Microphone access granted');
 
         recorder = new RecordRTC(stream, {
             type: 'audio',
@@ -34,16 +35,18 @@ async function startRecording(setRecording: StateSetter<boolean>, setIsActive: S
 
         setIsActive("active");
         recorder.startRecording();
-        // console.log('Recording started');
+        console.log('Recording started');
     } catch (error) {
+        console.error("Error accessing microphone");
         toast.error("Error accessing microphone");
         setRecording(false);
         setIsActive("inactive");
     }
+    console.groupEnd();
 }
 
 function stopRecording() {
-    // console.log('Stopping recording...');
+    console.log('Stopping recording...');
     if (recorder && recorder.getState() !== 'inactive') {
         recorder.stopRecording(() => {
             sendAudioChunks();
@@ -53,6 +56,8 @@ function stopRecording() {
 
 async function sendAudioChunks() {
     if (audioQueue.length > 0 && !isSending) {
+        console.group("Send Audio");
+
         isSending = true;
         const audioBlob = audioQueue.shift();
         if (!audioBlob)
@@ -60,13 +65,14 @@ async function sendAudioChunks() {
 
         const arrayBuffer = await audioBlob.arrayBuffer();
         const base64String = arrayBufferToBase64(arrayBuffer);
-        // console.log('Sending audio data to server');
-        transcribeAndProcessSocket.send(JSON.stringify({audio: base64String}));
-        // console.log('Sent audio data to server');
+        console.log('Sending audio data to server');
+        transcribeAndProcessSocket?.send(JSON.stringify({audio: base64String}));
+        console.log('Sent audio data to server');
         isSending = false;
         sendAudioChunks();  // Continue sending remaining chunks
+        console.groupEnd();
     } else {
-        console.log('No audio chunks to send');
+        console.warn('No audio chunks to send');
     }
 }
 
@@ -82,6 +88,9 @@ function startTranscriptionAndProcessing(
     setIsActive: StateSetter<TServerStates>
 ) {
     try {
+        if(transcribeAndProcessSocket)
+            transcribeAndProcessSocket.close();
+
         transcribeAndProcessSocket = new WebSocket(`${BACKEND_WS_URL}/v1/ws/transcription`);
 
         transcribeAndProcessSocket.onopen = () => {
@@ -91,79 +100,72 @@ function startTranscriptionAndProcessing(
 
         transcribeAndProcessSocket.onmessage = (event) => {
             const data = JSON.parse(event.data) as IServerRes;
-            console.log(data);
+            console.log("Received Data:", data);
 
-            if (data.type === "transcription") {
-                setMessages((prevState) => {
-                    let temp = [...prevState];
-                    let index = -1;
-
-                    for (let i = 0; i < temp.length; i++) {
-                        if (temp[i].id === data.message_id) {
-                            index = i;
-                            break;
-                        }
-                    }
-
-                    if (index === -1) {
-                        return [...prevState, {
-                            name: "Person 1",
-                            message: data.text,
-                            id: data.message_id
-                        }]
-                    }
-
-                    temp[index].summarized = '';
-                    temp[index].message += ' ' + data.text;
-                    return temp;
-                })
+            if (!data.text) {
+                console.warn("The server returned empty string; skipping this.");
+                return;
             }
-            else if (data.type === "concise" || data.type === "highlight") {
-                setMessages(prevState => {
-                    let temp = [...prevState];
-                    let index: number | null = null;
 
-                    for (let i = 0; i < temp.length; i++) {
-                        if (temp[i].id === data.message_id) {
-                            index = i;
-                            break;
-                        }
+            setMessages((prevState) => {
+                console.log("%c===========State Update============", "color:red;font-size:30px")
+                console.log("TIME:", Date.now());
+
+                // Find if the message with same ID already exists.
+                const index = prevState.findIndex(message => message.id === data.message_id);
+
+                if (data.type === "transcription") {
+                    if (index !== -1) {
+                        const updatedMessages = [...prevState];
+                        updatedMessages[index].message = `${updatedMessages[index].message} ${data.text}`;
+                        return updatedMessages;
                     }
 
-                    if (index !== null) {
-                        temp[index].summarized = data.text;
-                        return temp;
-                    }
+                    return [
+                        ...prevState,
+                        {name: "Person 1", message: data.text, id: data.message_id}
+                    ];
+                }
 
-                    return [...prevState, {
-                        name: "Person 1",
-                        message: data.text,
-                        summarized: data.text,
-                        id: data.message_id
-                    }]
-                })
-            } else {
-                throw new Error("Undefined type found in the server response");
-            }
+                // If the data type is "concise" or "highlight", update the summarized text or add a new message.
+                if (data.type === "concise" || data.type === "highlight") {
+                    if (index !== -1) {
+                        const updatedMessages = [...prevState];
+                        updatedMessages[index].summarized = data.text;
+                        return updatedMessages;
+                    }
+                    return [
+                        ...prevState,
+                        {name: "Person 1", message: data.text, summarized: data.text, id: data.message_id}
+                    ];
+                }
+                // Throw an error for any undefined data type.
+                throw new Error("Undefined type found in the server response: " + data.type);
+            });
         };
 
         transcribeAndProcessSocket.onclose = (e) => {
             setIsRecording(false);
             if (!e.wasClean) {
+                console.error("Connection to server closed unexpectedly")
                 setIsActive("inactive");
                 toast.error("Connection to server closed unexpectedly");
             }
             console.log('Transcription and Processing WebSocket disconnected');
             stopRecording();
+            transcribeAndProcessSocket = null;
         };
 
         transcribeAndProcessSocket.onerror = () => {
             setIsRecording(false);
             setIsActive("inactive");
             toast.error("Couldn't connect to the server");
+            transcribeAndProcessSocket = null;
         }
     } catch (e) {
         console.log("Error:", e);
+        transcribeAndProcessSocket?.close();
+        transcribeAndProcessSocket = null;
         setIsRecording(false);
     }
 }
@@ -171,6 +173,7 @@ function startTranscriptionAndProcessing(
 function stopTranscriptionAndProcessing() {
     if (transcribeAndProcessSocket) {
         transcribeAndProcessSocket.close();
+        transcribeAndProcessSocket = null;
     }
     stopRecording();
 }
