@@ -16,7 +16,6 @@ import {Dialog} from "@/components/Alerts";
 import Link from "next/link";
 import useSunvaAI from "@/app/home/useSunvaAI";
 import {toast} from "sonner";
-import {STORE_NAME} from "@/data/main";
 import TTS from "@/components/tts/TTS";
 
 
@@ -98,8 +97,9 @@ export default function Home() {
                 if (!saveNameRef.current?.value) {
                     toast.error("Please enter a name");
                 } else {
-                    let msg_data = JSON.stringify(messages);
-                    localStorage.setItem(STORE_NAME + saveNameRef.current.value, msg_data);
+                    // let msg_data = JSON.stringify(messages);
+                    //TODO
+                    //Implement local store.
                 }
             }}
         >
