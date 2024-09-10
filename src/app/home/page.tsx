@@ -17,7 +17,7 @@ import Link from "next/link";
 import useSunvaAI from "@/app/home/useSunvaAI";
 import {toast} from "sonner";
 import TTS from "@/components/tts/TTS";
-
+import ChangeLangBtn from "@/components/ChangeLangBtn";
 
 export default function Home() {
     const [isDelOpen, setIsDelOpen] = useState(false);
@@ -35,7 +35,7 @@ export default function Home() {
             <Link href="/home/saved" className="w-[24px]">
                 <NoteIcon/>
             </Link>
-            <h1 className="ml-[50px]">English</h1>
+            <ChangeLangBtn/>
             <div
                 className="w-[90px] flex items-center justify-center gap-2 rounded-full border-[1px] border-[#e6e6e6] px-2 text-sm text-black text-opacity-60">
                 <div className={`status-indicator ${isActive}`}></div>

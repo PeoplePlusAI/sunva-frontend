@@ -1,46 +1,18 @@
 "use client";
 
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from "@/components/ui/select"
-import {useEffect, useState} from "react";
 import {TPages} from "@/lib/types";
 import {toast} from "sonner";
 import {useLang} from "@/lib/context/langContext";
+import {langDict} from "@/lib/lang";
+import useLangAvail from "@/lib/hooks/useLangAvail";
 
-interface I_Lang {
-    [code: string]: string;
-}
 
-const langDict: I_Lang = {
-    'en': 'English',
-    'hi': 'Hindi',
-    'kn': 'Kannada',
-    'ml': 'Malayalam',
-};
+
 
 export default function SelectLanguage({pageSetter}: { pageSetter: (val: TPages) => void }) {
-    const [langList, setLangList] = useState<string[]>(['en']);
-    // const {lang, setLang} = useLang();
+    const {langList} = useLangAvail();
     const [lang, setLang] = useLang();
-
-    useEffect(() => {
-        fetch(`/api/v1/languages`)
-            .then(res => {
-                console.log(res)
-                if (!res.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return res.json();
-            })
-            .then((data) => {
-                setLangList(data.languages);
-            })
-            .catch((e) => {
-                toast.error("Error while fetching languages");
-                console.error("Error while fetching languages from server:", e);
-            })
-    }, []);
-
-    console.log(langList)
 
     return <section className="page flex items-center justify-between flex-col">
         <div className="flex h-[80%] flex-col justify-center w-full px-4">
