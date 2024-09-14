@@ -8,8 +8,6 @@ import {langDict} from "@/lib/lang";
 import useLangAvail from "@/lib/hooks/useLangAvail";
 
 
-
-
 export default function SelectLanguage({pageSetter}: { pageSetter: (val: TPages) => void }) {
     const {langList} = useLangAvail();
     const [lang, setLang] = useLang();

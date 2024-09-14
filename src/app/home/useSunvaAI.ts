@@ -214,6 +214,7 @@ export default function useSunvaAI() {
         isRecording,
         setIsRecording,
         messages,
+        setMessages,
         startRecording,
         stopRecording
     }

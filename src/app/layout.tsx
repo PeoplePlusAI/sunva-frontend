@@ -17,7 +17,7 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
         <LangProvider>
             {children}
         </LangProvider>
-        <Toaster richColors theme="light" closeButton/>
+        <Toaster richColors theme="light" closeButton position="top-center"/>
         </body>
         </html>
     );

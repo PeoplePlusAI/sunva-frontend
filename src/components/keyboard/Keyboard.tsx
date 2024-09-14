@@ -33,20 +33,20 @@ function Keyboard({text, setText, handleKeyPress, mode, changeMode, cursor, setC
             if (cursor > 0)
                 setCursor((prevState) => prevState - 1);
         }}>
-            <CaretLeftIcon/>
+            <CaretLeftIcon size={24}/>
         </button>
         <button className="keys" onClick={() => {
             if (cursor <= text.length - 1)
                 setCursor((prevState) => prevState + 1);
         }}>
-            <CaretRightIcon/>
+            <CaretRightIcon size={24}/>
         </button>
         <button className="keys" onClick={() => {
             setText(text.substring(0, cursor - 1) + text.substring(cursor));
             if (cursor !== 0)
                 setCursor((prevState) => prevState - 1);
         }}>
-            <BackspaceIcon/>
+            <BackspaceIcon size={24}/>
         </button>
         {
             keyboard_keys.map((key, i) => {

@@ -12,6 +12,7 @@ function Message({item}: { item: TMessage }) {
     return <>
         <div
             className={` ${showOriginal ? '' : 'summarize'} message-box`}
+            data-type={item.name === "You" ? "You" : "Other"}
         >
             <label className={`font-bold block`}>{item.name}</label>
             <p className="h-auto" dangerouslySetInnerHTML={{

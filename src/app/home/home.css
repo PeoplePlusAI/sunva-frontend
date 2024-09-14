@@ -37,6 +37,14 @@
     animation: pulse 1.5s ease-in-out infinite;
 }
 
+.message-you {
+    background: #FDF2DB;
+}
+
+.message-you label {
+    color: #A27413;
+}
+
 .message-1 {
     background: #E5F7FF;
 }
@@ -63,6 +71,10 @@
 
 .message-box:nth-child(even) {
     @apply message-2;
+}
+
+.message-box[data-type="You"] {
+    @apply message-you;
 }
 
 .message-box p {

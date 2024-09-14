@@ -1,14 +1,15 @@
 import {StateSetter} from "@/lib/types";
 
-function sendTtsText(text: string) {
+function sendTtsText(text: string, lang: string) {
     let ttsSocket: WebSocket;
     // @ts-ignore
     if (!ttsSocket || ttsSocket.readyState !== WebSocket.OPEN) {
-        ttsSocket = new WebSocket("ws://localhost:8000/v1/ws/speech");
+        ttsSocket = new WebSocket("api/v1/ws/speech");
         ttsSocket.onopen = () => {
             console.log("TTS WebSocket connected");
             ttsSocket.send(JSON.stringify({
-                text
+                text,
+                language: lang
             }));
         };
     } else {
@@ -42,15 +43,14 @@ function playTtsAudio(audioBase64: any) {
     console.log("Reached here");
 }
 
-export default function useTTS(text: string, setText: StateSetter<string>, setCursor: StateSetter<number>) {
-    // const []
+export default function useTTS(text: string, setText: StateSetter<string>, setCursor: StateSetter<number>, lang: string) {
     const sentenceEndings = /[.?!]/g;
     const sentences = text.split(sentenceEndings);
 
     if (sentences.length > 1) {
         const buffer = sentences.slice(0, -1).join('.') + text.match(sentenceEndings)?.slice(0, -1).join('');
         console.log("Sending TTS text:", buffer);
-        sendTtsText(buffer);
+        sendTtsText(buffer, lang);
         let currText = sentences[sentences.length - 1];
         setText(currText);
         setCursor(currText.length - 1 < 0 ? 0 : currText.length - 1);
@@ -58,7 +58,7 @@ export default function useTTS(text: string, setText: StateSetter<string>, setCu
 
     return {
         sendText: (text: string) => {
-            sendTtsText(text);
+            sendTtsText(text, lang);
         }
     }
 }
