@@ -31,7 +31,7 @@ export function LangProvider({children}: { children: React.ReactNode }) {
 export function useLang() {
     const context = React.useContext(LangContext);
     if (context === undefined) {
-        throw new Error('useCounter must be used within a CounterProvider');
+        throw new Error('use ctx hook must be used within that ctx provider');
     }
     return context;
 }
