@@ -1,5 +1,5 @@
 interface IProps {
-    size: number
+    size?: number
 }
 
 export function NoteIcon() {
@@ -51,36 +51,41 @@ export function StopIcon() {
     </svg>
 }
 
-export function CaretLeftIcon({size}: {size?: number}) {
-    return <svg xmlns="http://www.w3.org/2000/svg" width={size || 32} height={size || 32} fill="#000000" viewBox="0 0 256 256">
+export function CaretLeftIcon({size}: { size?: number }) {
+    return <svg xmlns="http://www.w3.org/2000/svg" width={size || 32} height={size || 32} fill="#000000"
+                viewBox="0 0 256 256">
         <path
             d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"></path>
     </svg>
 }
 
-export function CaretRightIcon({size}: {size?: number}) {
-    return <svg xmlns="http://www.w3.org/2000/svg" width={size || 32} height={size || 32} fill="#000000" viewBox="0 0 256 256">
+export function CaretRightIcon({size}: { size?: number }) {
+    return <svg xmlns="http://www.w3.org/2000/svg" width={size || 32} height={size || 32} fill="#000000"
+                viewBox="0 0 256 256">
         <path
             d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"></path>
     </svg>
 }
 
 export function CaretDownIcon({size}: { size?: number }) {
-    return <svg xmlns="http://www.w3.org/2000/svg" width={size || 24} height={size || 24} fill="#000000" viewBox="0 0 256 256">
+    return <svg xmlns="http://www.w3.org/2000/svg" width={size || 24} height={size || 24} fill="#000000"
+                viewBox="0 0 256 256">
         <path
             d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
     </svg>
 }
 
-export function CaretUpIcon({size}: {size?: number}) {
-    return <svg xmlns="http://www.w3.org/2000/svg" width={size || 32} height={size || 32} fill="#000000" viewBox="0 0 256 256">
+export function CaretUpIcon({size}: { size?: number }) {
+    return <svg xmlns="http://www.w3.org/2000/svg" width={size || 32} height={size || 32} fill="#000000"
+                viewBox="0 0 256 256">
         <path
             d="M213.66,165.66a8,8,0,0,1-11.32,0L128,91.31,53.66,165.66a8,8,0,0,1-11.32-11.32l80-80a8,8,0,0,1,11.32,0l80,80A8,8,0,0,1,213.66,165.66Z"></path>
     </svg>
 }
 
-export function BackspaceIcon({size}: {size?: number}) {
-    return <svg xmlns="http://www.w3.org/2000/svg" width={size || 32} height={size || 32} fill="#000000" viewBox="0 0 256 256">
+export function BackspaceIcon({size}: { size?: number }) {
+    return <svg xmlns="http://www.w3.org/2000/svg" width={size || 32} height={size || 32} fill="#000000"
+                viewBox="0 0 256 256">
         <path
             d="M216,40H68.53a16.08,16.08,0,0,0-13.72,7.77L9.14,123.88a8,8,0,0,0,0,8.24l45.67,76.11A16.08,16.08,0,0,0,68.53,216H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM61.67,204.12,68.53,200h0ZM216,200H68.53l-43.2-72,43.2-72H216ZM106.34,146.34,124.69,128l-18.35-18.34a8,8,0,0,1,11.32-11.32L136,116.69l18.34-18.35a8,8,0,0,1,11.32,11.32L147.31,128l18.35,18.34a8,8,0,0,1-11.32,11.32L136,139.31l-18.34,18.35a8,8,0,0,1-11.32-11.32Z"></path>
     </svg>
@@ -94,9 +99,16 @@ export function SwapIcon({size}: IProps) {
 }
 
 export function SendIcon({size, className}: { size: number, className?: string }) {
-    return <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} className={className} viewBox="0 0 256 256">
+    return <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} className={className}
+                viewBox="0 0 256 256">
         <path
             d="M231.87,114l-168-95.89A16,16,0,0,0,40.92,37.34L71.55,128,40.92,218.67A16,16,0,0,0,56,240a16.15,16.15,0,0,0,7.93-2.1l167.92-96.05a16,16,0,0,0,.05-27.89ZM56,224a.56.56,0,0,0,0-.12L85.74,136H144a8,8,0,0,0,0-16H85.74L56.06,32.16A.46.46,0,0,0,56,32l168,95.83Z"></path>
     </svg>
 }
 
+export function KeypadIcon({size}: IProps) {
+    return <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="#000000" viewBox="0 0 256 256">
+        <path
+            d="M80,48A16,16,0,1,1,64,32,16,16,0,0,1,80,48Zm48-16a16,16,0,1,0,16,16A16,16,0,0,0,128,32Zm64,32a16,16,0,1,0-16-16A16,16,0,0,0,192,64ZM64,88a16,16,0,1,0,16,16A16,16,0,0,0,64,88Zm64,0a16,16,0,1,0,16,16A16,16,0,0,0,128,88Zm64,0a16,16,0,1,0,16,16A16,16,0,0,0,192,88ZM64,144a16,16,0,1,0,16,16A16,16,0,0,0,64,144Zm64,0a16,16,0,1,0,16,16A16,16,0,0,0,128,144Zm0,56a16,16,0,1,0,16,16A16,16,0,0,0,128,200Zm64-56a16,16,0,1,0,16,16A16,16,0,0,0,192,144Z"></path>
+    </svg>
+}

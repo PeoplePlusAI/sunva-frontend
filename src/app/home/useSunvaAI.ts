@@ -67,7 +67,6 @@ async function sendAudioChunks(lang: string) {
         const base64String = arrayBufferToBase64(arrayBuffer);
         const data = JSON.stringify({audio: base64String, language: lang || 'en'});
         console.log('Sending audio data to server');
-        console.log("Data Sent:", data);
         transcribeAndProcessSocket?.send(data);
         console.log('Sent audio data to server');
         isSending = false;

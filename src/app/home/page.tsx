@@ -10,7 +10,7 @@ import {
     TrashIcon,
     UpAndDownArrow
 } from "@/components/Icons";
-import {useCallback, useRef, useState} from "react";
+import {useRef, useState} from "react";
 import MessagesList from "@/components/MessageList";
 import {Dialog} from "@/components/Alerts";
 import Link from "next/link";
@@ -26,9 +26,9 @@ export default function Home() {
     const saveNameRef = useRef<HTMLInputElement>(null);
     const [isTTSOpen, setIsTTSOpen] = useState(false);
 
-    const ttsClose = useCallback(() => {
+    const ttsClose = () => {
         setIsTTSOpen(false);
-    }, []);
+    };
 
     return <main className="accessibility flex justify-between flex-col w-full h-full px-4 pt-3 pb-4">
         <div className="w-full h-[40px] flex items-center justify-between">
@@ -96,9 +96,17 @@ export default function Home() {
                 if (!saveNameRef.current?.value) {
                     toast.error("Please enter a name");
                 } else {
-                    // let msg_data = JSON.stringify(messages);
-                    //TODO
-                    //Implement local store.
+                    // fetch("api/v1/transcription/save", {
+                    //     method: "POST"
+                    // })
+                    //     .then(res => res.json())
+                    //     .then(data => {
+                    //         console.log(data);
+                    //     })
+                    //     .catch(e => {
+                    //         toast.error("Couldn't save the conversation");
+                    //         console.error("Error while saving;", e);
+                    //     })
                 }
             }}
         >

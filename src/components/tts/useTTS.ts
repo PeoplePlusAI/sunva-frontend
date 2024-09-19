@@ -1,6 +1,7 @@
-import {StateSetter} from "@/lib/types";
+import {useEffect, useState} from "react";
 
-function sendTtsText(text: string, lang: string) {
+function sendTtsText(text: string, lang: string, beforeMsgSend: () => void) {
+    beforeMsgSend();
     let ttsSocket: WebSocket;
     // @ts-ignore
     if (!ttsSocket || ttsSocket.readyState !== WebSocket.OPEN) {
@@ -43,22 +44,26 @@ function playTtsAudio(audioBase64: any) {
     console.log("Reached here");
 }
 
-export default function useTTS(text: string, setText: StateSetter<string>, setCursor: StateSetter<number>, lang: string) {
-    const sentenceEndings = /[.?!]/g;
-    const sentences = text.split(sentenceEndings);
+export default function useTTS(lang: string, beforeMsgSend: () => void) {
+    const [text, setText] = useState('');
 
-    if (sentences.length > 1) {
-        const buffer = sentences.slice(0, -1).join('.') + text.match(sentenceEndings)?.slice(0, -1).join('');
-        console.log("Sending TTS text:", buffer);
-        sendTtsText(buffer, lang);
-        let currText = sentences[sentences.length - 1];
-        setText(currText);
-        setCursor(currText.length - 1 < 0 ? 0 : currText.length - 1);
-    }
+    useEffect(() => {
+        const sentenceEndings = /[.?!]/g;
+        const sentences = text.split(sentenceEndings);
+
+        if (sentences.length > 1) {
+            const buffer = sentences.slice(0, -1).join('.') + text.match(sentenceEndings)?.slice(0, -1).join('');
+            let currText = sentences[sentences.length - 1];
+            setText(() => currText);
+            sendTtsText(buffer, lang, beforeMsgSend);
+        }
+    }, [text]);
 
     return {
+        text,
+        setText,
         sendText: (text: string) => {
-            sendTtsText(text, lang);
+            sendTtsText(text, lang, beforeMsgSend);
         }
     }
 }
