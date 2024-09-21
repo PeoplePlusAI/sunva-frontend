@@ -10,33 +10,32 @@ import {
     TrashIcon,
     UpAndDownArrow
 } from "@/components/Icons";
-import {useCallback, useRef, useState} from "react";
+import {useRef, useState} from "react";
 import MessagesList from "@/components/MessageList";
 import {Dialog} from "@/components/Alerts";
 import Link from "next/link";
 import useSunvaAI from "@/app/home/useSunvaAI";
 import {toast} from "sonner";
-import {STORE_NAME} from "@/data/main";
 import TTS from "@/components/tts/TTS";
-
+import ChangeLangBtn from "@/components/ChangeLangBtn";
 
 export default function Home() {
     const [isDelOpen, setIsDelOpen] = useState(false);
     const [isSaveOpen, setIsSaveOpen] = useState(false);
-    const {messages, isRecording, setIsRecording, isActive, startRecording, stopRecording} = useSunvaAI();
+    const {messages, setMessages, isRecording, setIsRecording, isActive, startRecording, stopRecording} = useSunvaAI();
     const saveNameRef = useRef<HTMLInputElement>(null);
     const [isTTSOpen, setIsTTSOpen] = useState(false);
 
-    const ttsClose = useCallback(() => {
+    const ttsClose = () => {
         setIsTTSOpen(false);
-    }, []);
+    };
 
     return <main className="accessibility flex justify-between flex-col w-full h-full px-4 pt-3 pb-4">
         <div className="w-full h-[40px] flex items-center justify-between">
             <Link href="/home/saved" className="w-[24px]">
                 <NoteIcon/>
             </Link>
-            <h1 className="ml-[50px]">English</h1>
+            <ChangeLangBtn/>
             <div
                 className="w-[90px] flex items-center justify-center gap-2 rounded-full border-[1px] border-[#e6e6e6] px-2 text-sm text-black text-opacity-60">
                 <div className={`status-indicator ${isActive}`}></div>
@@ -45,34 +44,33 @@ export default function Home() {
         </div>
         <MessagesList messages={messages}/>
 
-        <div className="px-5 h-[75px] py-1 bg-white shadow flex rounded-3xl gap-7 justify-evenly items-center">
-            <SettingsIcon/>
-            <button onClick={() => setIsDelOpen(true)}><TrashIcon/></button>
-            <button
-                className={`h-[65%] aspect-square rounded-full flex items-center justify-center record-btn ${isRecording ? 'recording' : ''}`}
-                onClick={() => {
-                    setIsRecording((prev) => !prev);
+        {isTTSOpen ? <TTS setMessages={setMessages} onClose={ttsClose}/> :
+            <div className="px-5 h-[75px] py-1 bg-white shadow flex rounded-3xl gap-7 justify-evenly items-center">
+                <SettingsIcon/>
+                <button onClick={() => setIsDelOpen(true)}><TrashIcon/></button>
+                <button
+                    className={`h-[65%] aspect-square rounded-full flex items-center justify-center record-btn ${isRecording ? 'recording' : ''}`}
+                    onClick={() => {
+                        setIsRecording((prev) => !prev);
 
-                    if (isRecording) {
-                        stopRecording();
-                    } else {
-                        startRecording();
-                    }
-                }}
-            >
-                {isRecording ? <StopIcon/> : <MicroPhoneIcon/>}
-            </button>
-            <button onClick={() => {
-                setIsTTSOpen(true);
-                setIsRecording(false);
-                stopRecording();
-            }}>
-                <KeyboardIcon/>
-            </button>
-            <UpAndDownArrow/>
-        </div>
-
-        <TTS className={isTTSOpen ? 'window-visible' : 'window-hidden'} onClose={ttsClose}/>
+                        if (isRecording) {
+                            stopRecording();
+                        } else {
+                            startRecording();
+                        }
+                    }}
+                >
+                    {isRecording ? <StopIcon/> : <MicroPhoneIcon/>}
+                </button>
+                <button onClick={() => {
+                    setIsTTSOpen(true);
+                    setIsRecording(false);
+                    stopRecording();
+                }}>
+                    <KeyboardIcon/>
+                </button>
+                <UpAndDownArrow/>
+            </div>}
 
         <Dialog
             title="Do you want to save this conversation?"
@@ -98,8 +96,17 @@ export default function Home() {
                 if (!saveNameRef.current?.value) {
                     toast.error("Please enter a name");
                 } else {
-                    let msg_data = JSON.stringify(messages);
-                    localStorage.setItem(STORE_NAME + saveNameRef.current.value, msg_data);
+                    // fetch("api/v1/transcription/save", {
+                    //     method: "POST"
+                    // })
+                    //     .then(res => res.json())
+                    //     .then(data => {
+                    //         console.log(data);
+                    //     })
+                    //     .catch(e => {
+                    //         toast.error("Couldn't save the conversation");
+                    //         console.error("Error while saving;", e);
+                    //     })
                 }
             }}
         >

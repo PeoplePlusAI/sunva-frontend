@@ -12,8 +12,11 @@ person while having the communication.
 1. To get started, clone the repository.
 2. Install the dependencies using `npm install` or `yarn install` or `pnpm install` or `bun install`
     > The project uses `pnpm` as the package manager, but any of them can be used.
-3. The backend URLs are configured in the [src/data/main.ts](src/data/main.ts), change accordingly.
-   > If you're running this locally, then skip this step (step 3).
+3. Create `.env.local` file in the root of the project and add the following environment variables:
+    ```env
+   BACKEND=http://localhost:8000
+    ```
+   Change the value to the desired backend URL.
 4. The to start the development server, run the following command:
     ```bash
     npm run dev
