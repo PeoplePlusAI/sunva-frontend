@@ -40,7 +40,7 @@ export default function SelectLanguage({pageSetter}: { pageSetter: (val: TPages)
                 return;
             }
 
-            pageSetter("2");
+            pageSetter("accessibility");
         }}>
             Continue
         </button>

@@ -14,6 +14,7 @@ export default function Login({pageSetter}: { pageSetter: (val: TPages) => void 
                 <label htmlFor="email" className="block">Email</label>
                 <input type="email" name="email" placeholder="Enter here" className="border-[2px] rounded-lg w-full"
                        value={email} onChange={(e) => setEmail(e.target.value)}
+                       required
                 />
             </div>
             <div className="unit">
