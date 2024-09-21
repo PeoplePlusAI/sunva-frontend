@@ -6,16 +6,19 @@ import SelectLanguage from "@/components/SelectLanguage";
 import TextSize from "@/components/TextSize";
 import {TPages} from "@/lib/types";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
+import Signup from "@/components/login/Signup";
 
 
 function ShowPage({currPage, pageSetter}: { currPage: TPages, pageSetter: (value: TPages) => void }) {
     switch (currPage) {
         default:
-        case "0":
+        case "login":
             return <Login pageSetter={pageSetter}/>;
-        case "1":
+        case "signup":
+            return <Signup pageSetter={pageSetter}/>;
+        case "lang":
             return <SelectLanguage pageSetter={pageSetter}/>;
-        case "2":
+        case "accessibility":
             return <TextSize/>
     }
 }
@@ -25,7 +28,7 @@ export default function Home() {
     const router = useRouter();
     const pathname = usePathname();
 
-    const currPage = searchParams.get("page") as TPages || "0";
+    const currPage = searchParams.get("page") as TPages || "signup";
 
     const changePage = useCallback((value: TPages) => {
         const params = new URLSearchParams(searchParams.toString())
