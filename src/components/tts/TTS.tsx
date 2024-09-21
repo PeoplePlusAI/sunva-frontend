@@ -6,7 +6,12 @@ import {useLang} from "@/lib/context/langContext";
 import {toast} from "sonner";
 import {StateSetter, TMessage} from "@/lib/types";
 
-function TTS({setMessages, onClose}: { setMessages: StateSetter<TMessage[]>, onClose: () => void }) {
+const TTS_SEND_BTN_ID = "tts-send";
+
+function TTS({setMessages, onClose}: {
+    setMessages: StateSetter<TMessage[]>,
+    onClose: () => void,
+},) {
     const inputElmRef = useRef<HTMLInputElement>(null);
     const [lang] = useLang();
     const {text, setText, sendText} = useTTS(lang, () => {
@@ -38,15 +43,19 @@ function TTS({setMessages, onClose}: { setMessages: StateSetter<TMessage[]>, onC
                            sendTextAndClear();
                        }
                    }}
-                   onBlur={() => {
-                       setTimeout(() => onClose(), 0);
+                   onBlur={(e) => {
+                       // If the event happened due to the send button, do nothing;
+                       if (e.relatedTarget && e.relatedTarget.id === TTS_SEND_BTN_ID) {
+                           e.target.focus();
+                           return;
+                       }
+
+                       onClose();
                    }}
                    className="px-2 rounded-lg box-shadow flex-1 border-brand-secondary border-[1px] resize-none"
                    ref={inputElmRef}
             />
-            <button className="p-2 rounded-xl bg-black" onClick={() => {
-                inputElmRef.current?.focus();
-                console.log("hello");
+            <button id={TTS_SEND_BTN_ID} className="p-2 rounded-xl bg-black" onClick={() => {
                 if (text) {
                     sendTextAndClear();
                 } else {
