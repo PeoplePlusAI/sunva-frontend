@@ -39,6 +39,9 @@ function TTS({setMessages, onClose}: {
                 setText(e.target.value);
             }}
                    onKeyDown={(e) => {
+                       if (e.key === "Escape")
+                           onClose();
+
                        if (e.key === "Enter" && text) {
                            sendTextAndClear();
                        }
