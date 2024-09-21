@@ -14,7 +14,7 @@ import {useRef, useState} from "react";
 import MessagesList from "@/components/MessageList";
 import {Dialog} from "@/components/Alerts";
 import Link from "next/link";
-import useSunvaAI from "@/app/home/useSunvaAI";
+import useSunvaAI from "@/lib/hooks/useSunvaAI";
 import {toast} from "sonner";
 import TTS from "@/components/tts/TTS";
 import ChangeLangBtn from "@/components/ChangeLangBtn";
