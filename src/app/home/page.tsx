@@ -10,7 +10,7 @@ import {
     TrashIcon,
     UpAndDownArrow
 } from "@/components/Icons";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import MessagesList from "@/components/MessageList";
 import {Dialog} from "@/components/Alerts";
 import Link from "next/link";
@@ -33,8 +33,18 @@ export default function Home() {
     };
 
     // If use isn't logged then redirect to the home page
-    if(!session?.email)
-        return redirect("/");
+    useEffect(() => {
+        // if(!session?.email)
+        //     return redirect("/");
+        let stored = localStorage.getItem("user-session")
+        if(stored) {
+            let data = JSON.parse(stored)
+            if(!data.email)
+                redirect("/");
+        } else {
+            redirect("/");
+        }
+    }, [session?.email]);
 
     return <main className="accessibility flex justify-between flex-col w-full h-full px-4 pt-3 pb-4">
         <div className="w-full h-[40px] flex items-center justify-between">
