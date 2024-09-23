@@ -3,12 +3,15 @@ import {useState} from "react";
 import {toast} from "sonner";
 import {TPages} from "@/lib/types";
 import {PasswordInput} from "@/components/PasswordInput";
+import {useRouter} from "next/navigation";
 
 
 export default function Signup({pageSetter}: { pageSetter: (val: TPages) => void }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const router = useRouter();
+
 
     return <section className="w-full h-full flex items-center justify-center px-8">
         <form className="flex flex-col items-center justify-center login-form gap-4 w-full">
@@ -29,7 +32,38 @@ export default function Signup({pageSetter}: { pageSetter: (val: TPages) => void
                                placeholder="Retype password"/>
             </div>
             <button type="submit" className="mt-5 btn-primary px-10" onClick={(e) => {
+                e.preventDefault();
+                if (password != confirmPassword) {
+                    toast.warning("Passwords don't match");
+                    return;
+                }
 
+                fetch('/api/user/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': ''},
+                    body: JSON.stringify({
+                        "email": email,
+                        "password": password,
+                        "language": "en"
+                    })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log("Return data:", data);
+
+                        if (data.detail) {
+                            toast.error(data.detail);
+                            return;
+                        }
+                        try {
+                            router.push("?page=login");
+                        } catch (e) {
+                        }
+                    })
+                    .catch(e => {
+                        console.error("ERROR:", e);
+                        toast.error("Couldn't create the account");
+                    });
             }}>
                 Signup
             </button>

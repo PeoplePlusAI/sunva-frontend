@@ -3,7 +3,7 @@ import {StateSetter, TMessage, TServerStates} from "@/lib/types";
 import RecordRTC from "recordrtc";
 import {arrayBufferToBase64} from "@/lib/sunva-ai";
 import {toast} from "sonner";
-import {useLang} from "@/lib/context/langContext";
+import {TSessionCtx} from "@/lib/context/sessionContext";
 
 let transcribeAndProcessSocket: WebSocket | null;
 let recorder: RecordRTC;
@@ -179,11 +179,10 @@ function stopTranscriptionAndProcessing(lang: string) {
     stopRecording(lang);
 }
 
-export default function useSunvaAI() {
+export default function useSunvaAI(session: TSessionCtx) {
     const [isActive, setIsActive] = useState<TServerStates>("active");
     const [isRecording, setIsRecording] = useState(false);
     const [messages, setMessages] = useState<TMessage[]>([]);
-    const [lang] = useLang();
 
     useEffect(() => {
         fetch(`api/is-alive`, {
@@ -200,11 +199,11 @@ export default function useSunvaAI() {
     }, []);
 
     function startRecording() {
-        startTranscriptionAndProcessing(setMessages, setIsRecording, setIsActive, lang);
+        startTranscriptionAndProcessing(setMessages, setIsRecording, setIsActive, session?.lang || "en");
     }
 
     function stopRecording() {
-        stopTranscriptionAndProcessing(lang);
+        stopTranscriptionAndProcessing(session?.lang || "en");
     }
 
     return {

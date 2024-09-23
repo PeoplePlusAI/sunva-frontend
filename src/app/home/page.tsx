@@ -18,17 +18,23 @@ import useSunvaAI from "@/lib/hooks/useSunvaAI";
 import {toast} from "sonner";
 import TTS from "@/components/tts/TTS";
 import ChangeLangBtn from "@/components/ChangeLangBtn";
+import {useSession} from "@/lib/context/sessionContext";
+import {redirect} from "next/navigation";
 
 export default function Home() {
+    const [session] = useSession();
     const [isDelOpen, setIsDelOpen] = useState(false);
     const [isSaveOpen, setIsSaveOpen] = useState(false);
-    const {messages, setMessages, isRecording, setIsRecording, isActive, startRecording, stopRecording} = useSunvaAI();
+    const {messages, setMessages, isRecording, setIsRecording, isActive, startRecording, stopRecording} = useSunvaAI(session);
     const saveNameRef = useRef<HTMLInputElement>(null);
     const [isTTSOpen, setIsTTSOpen] = useState(false);
-
     const ttsClose = () => {
         setIsTTSOpen(false);
     };
+
+    // If use isn't logged then redirect to the home page
+    if(!session?.email)
+        return redirect("/");
 
     return <main className="accessibility flex justify-between flex-col w-full h-full px-4 pt-3 pb-4">
         <div className="w-full h-[40px] flex items-center justify-between">

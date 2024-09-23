@@ -3,10 +3,14 @@ import {useState} from "react";
 import {toast} from "sonner";
 import {TPages} from "@/lib/types";
 import {PasswordInput} from "@/components/PasswordInput";
+import {useRouter} from "next/navigation";
+import {useSession} from "@/lib/context/sessionContext";
 
 export default function Login({pageSetter}: { pageSetter: (val: TPages) => void }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [_, setSession] = useSession();
+    const router = useRouter();
 
     return <section className="w-full h-full flex items-center justify-center px-8">
         <form className="flex flex-col items-center justify-center login-form gap-4 w-full">
@@ -24,17 +28,41 @@ export default function Login({pageSetter}: { pageSetter: (val: TPages) => void 
             <button type="submit" className="mt-5 btn-primary px-10" onClick={(e) => {
                 e.preventDefault();
 
-                if (!email || !password) {
-                    toast.error("Please enter email and password");
-                } else {
-                    pageSetter("lang");
-                }
+                fetch('/api/v1/sessions', {
+                    method: 'POST',
+                    headers: {'Content-Type': ''},
+                    body: JSON.stringify({
+                        "email": email,
+                        "password": password,
+                    })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data);
+
+                        if(data.detail) {
+                            toast.error(data.detail);
+                            return;
+                        }
+
+                        setSession({
+                            email: data.email as string,
+                            lang: data.language as string,
+                            user_id: data.user_id as string
+                        })
+
+                        router.push("/home");
+                    })
+                    .catch(e => {
+                        console.error(e);
+                        toast.error("Couldn't create the account");
+                    })
             }}>
                 Login
             </button>
 
             <p className="text-sm absolute bottom-10">
-                 Don&apos;t have an account?
+                Don&apos;t have an account?
                 <button className="text-blue-600 underline ml-1" onClick={(e) => {
                     e.preventDefault();
                     pageSetter("signup");
