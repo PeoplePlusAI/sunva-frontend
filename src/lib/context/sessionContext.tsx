@@ -2,6 +2,7 @@
 
 import {createContext, useContext, useEffect, useState} from 'react';
 import {StateSetter} from "@/lib/types";
+import {LocalStoreKey} from "@/lib/data";
 
 interface IUserSession {
     lang: string;
@@ -13,8 +14,6 @@ export type TSessionCtx = IUserSession | null;
 
 const SessionContext = createContext<[TSessionCtx, StateSetter<TSessionCtx>] | undefined>(undefined);
 
-const LocalStoreKey = "user-session";
-
 export function SessionProvider({children}: { children: React.ReactNode }) {
     const [session, setSession] = useState<TSessionCtx>({
         lang: "en",
@@ -23,8 +22,8 @@ export function SessionProvider({children}: { children: React.ReactNode }) {
     });
 
     function setSessionAndStore(value: IUserSession) {
-        console.log(value)
-        localStorage.setItem(LocalStoreKey, JSON.stringify(value));
+        let text = btoa(JSON.stringify(value));
+        localStorage.setItem(LocalStoreKey, text);
         setSession(value);
     }
 
@@ -41,7 +40,7 @@ export function SessionProvider({children}: { children: React.ReactNode }) {
                 return;
             }
 
-            const item = JSON.parse(rawData!) as IUserSession;
+            const item = JSON.parse(atob(rawData!)) as IUserSession;
 
             if (item)
                 setSession(item);

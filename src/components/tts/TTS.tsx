@@ -2,9 +2,9 @@ import "./style.css"
 import {memo, useEffect, useRef} from "react";
 import useTTS from "@/components/tts/useTTS";
 import {SendIcon} from "@/components/Icons";
-import {useLang} from "@/lib/context/langContext";
 import {toast} from "sonner";
 import {StateSetter, TMessage} from "@/lib/types";
+import {useSession} from "@/lib/context/sessionContext";
 
 const TTS_SEND_BTN_ID = "tts-send";
 
@@ -13,7 +13,9 @@ function TTS({setMessages, onClose}: {
     onClose: () => void,
 },) {
     const inputElmRef = useRef<HTMLInputElement>(null);
-    const [lang] = useLang();
+    const [session] = useSession();
+    const lang = session?.lang || "en";
+
     const {text, setText, sendText} = useTTS(lang, () => {
         // When a new text is sent to the server, add the message to the message list;
         setMessages((prev) => [...prev, {name: "You", message: text, id: "" + (Date.now() + Math.random())}]);

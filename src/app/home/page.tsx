@@ -25,7 +25,15 @@ export default function Home() {
     const [session] = useSession();
     const [isDelOpen, setIsDelOpen] = useState(false);
     const [isSaveOpen, setIsSaveOpen] = useState(false);
-    const {messages, setMessages, isRecording, setIsRecording, isActive, startRecording, stopRecording} = useSunvaAI(session);
+    const {
+        messages,
+        setMessages,
+        isRecording,
+        setIsRecording,
+        isActive,
+        startRecording,
+        stopRecording
+    } = useSunvaAI(session);
     const saveNameRef = useRef<HTMLInputElement>(null);
     const [isTTSOpen, setIsTTSOpen] = useState(false);
     const ttsClose = () => {
@@ -34,14 +42,16 @@ export default function Home() {
 
     // If use isn't logged then redirect to the home page
     useEffect(() => {
-        // if(!session?.email)
-        //     return redirect("/");
-        let stored = localStorage.getItem("user-session")
-        if(stored) {
-            let data = JSON.parse(stored)
-            if(!data.email)
+        try {
+            let stored = localStorage.getItem("user-session");
+            if (stored) {
+                let data = JSON.parse(atob(stored));
+                if (!data.email)
+                    redirect("/");
+            } else {
                 redirect("/");
-        } else {
+            }
+        } catch (e) {
             redirect("/");
         }
     }, [session?.email]);
