@@ -2,7 +2,7 @@ import type {Metadata} from "next";
 import "./globals.css";
 import {inter} from "@/lib/font";
 import {Toaster} from "@/components/ui/sonner";
-import {LangProvider} from "@/lib/context/langContext";
+import {SessionProvider} from "@/lib/context/sessionContext";
 
 
 export const metadata: Metadata = {
@@ -14,9 +14,18 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
     return (
         <html lang="en">
         <body className={inter.className}>
-        <LangProvider>
+
+        <a
+            className="banner right-top"
+            href="https://github.com/PeoplePlusAI/sunva-ai"
+            data-ribbon="Fork Me"
+            title="Made with ❤️ for 🇮🇳 by People+AI"
+        />
+
+
+        <SessionProvider>
             {children}
-        </LangProvider>
+        </SessionProvider>
         <Toaster richColors theme="light" closeButton position="top-center"/>
         </body>
         </html>
