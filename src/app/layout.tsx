@@ -14,6 +14,15 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
     return (
         <html lang="en">
         <body className={inter.className}>
+
+        <a
+            className="banner right-top"
+            href="https://github.com/PeoplePlusAI/sunva-ai"
+            data-ribbon="Fork Me"
+            title="Made with ❤️ for 🇮🇳 by People+AI"
+        />
+
+
         <SessionProvider>
             {children}
         </SessionProvider>
