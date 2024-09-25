@@ -37,6 +37,7 @@ function Message({item}: { item: TMessage }) {
 
 function MessagesList({messages}: { messages: TMessage[] }) {
     const section = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
         section.current?.scrollTo(0, section.current.scrollHeight);
     }, [messages]);

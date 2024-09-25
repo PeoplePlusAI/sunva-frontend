@@ -28,7 +28,7 @@ export default function Login({pageSetter}: { pageSetter: (val: TPages) => void 
             <button type="submit" className="mt-5 btn-primary px-10" onClick={(e) => {
                 e.preventDefault();
 
-                fetch('/api/v1/sessions', {
+                fetch('/api/user/login', {
                     method: 'POST',
                     headers: {'Content-Type': ''},
                     body: JSON.stringify({
