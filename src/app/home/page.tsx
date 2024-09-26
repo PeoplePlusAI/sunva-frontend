@@ -56,7 +56,7 @@ export default function Home() {
 
     return <main className="accessibility flex justify-between flex-col w-full h-full px-4 pt-3 pb-4">
         <button onClick={() => {
-            fetch("/api/user/verify", {
+            fetch("http://localhost:8000/user/verify", {
                 method: 'GET',
                 credentials: 'include'
             })

@@ -6,7 +6,7 @@ export default function useLangAvail() {
     const [langList, setLangList] = useState<string[]>(['en']);
 
     useEffect(() => {
-        fetch(`/api/v1/languages`)
+        fetch(`http://localhost:8000/v1/languages`)
             .then(res => {
                 console.log(res)
                 if (!res.ok) {
