@@ -2,6 +2,7 @@
 
 import {useRouter} from "next/navigation";
 import {toast} from "sonner";
+import {LocalStoreKey} from "@/lib/data";
 
 
 export default function Chats() {
@@ -45,6 +46,7 @@ export default function Chats() {
                     })
                         .then(res => res.json())
                         .then(() => {
+                            localStorage.removeItem(LocalStoreKey);
                             toast.success("Logged out successfully");
                             router.push("/?page=login");
                         })

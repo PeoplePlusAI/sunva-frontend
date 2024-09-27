@@ -2,7 +2,7 @@ import type {NextRequest} from 'next/server'
 import {NextResponse} from 'next/server'
 
 
-const LOGIN_ROUTE = '/?page=user';
+const LOGIN_ROUTE = '/?page=login';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(req: NextRequest) {
