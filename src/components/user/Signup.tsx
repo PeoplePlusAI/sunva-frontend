@@ -38,7 +38,7 @@ export default function Signup({pageSetter}: { pageSetter: (val: TPages) => void
                     return;
                 }
 
-                fetch('/api/user/register', {
+                fetch('http://localhost:8000/user/register', {
                     method: 'POST',
                     headers: {'Content-Type': ''},
                     body: JSON.stringify({
