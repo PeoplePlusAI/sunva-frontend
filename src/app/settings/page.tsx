@@ -1,6 +1,7 @@
 "use client";
 
 import {useRouter} from "next/navigation";
+import {toast} from "sonner";
 
 
 export default function Chats() {
@@ -38,9 +39,19 @@ export default function Chats() {
                 Logout from account <button
                 className="bg-red-300 px-2 py-1 w-[80px] rounded border-2 border-red-400"
                 onClick={() => {
-                    console.log("Logging out");
                     localStorage.removeItem("user-session");
-                    router.replace("/")
+                    fetch('/api/user/logout', {
+                        method: 'POST'
+                    })
+                        .then(res => res.json())
+                        .then(() => {
+                            toast.success("Logged out successfully");
+                            router.push("/?page=login");
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            toast.error("Failed to logout")
+                        })
                 }}
             >Logout</button>
             </div>

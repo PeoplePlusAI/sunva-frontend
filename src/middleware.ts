@@ -20,13 +20,17 @@ export async function middleware(req: NextRequest) {
                 'Cookie': token.name + '=' + token.value
             }
         });
+
+        // If okay do nothing (eat a 5 star!)
         return NextResponse.next();
     } catch (error) {
+        // If not okay, redirect to login
         console.log(error)
         return NextResponse.redirect(new URL(LOGIN_ROUTE, req.url));
     }
 }
 
 export const config = {
+    // Only run this middleware when the following paths are encountered
     matcher: ['/home', '/settings'],
 }
