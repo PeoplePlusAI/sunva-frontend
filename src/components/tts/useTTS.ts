@@ -5,7 +5,7 @@ function sendTtsText(text: string, lang: string, beforeMsgSend: () => void) {
     let ttsSocket: WebSocket;
     // @ts-ignore
     if (!ttsSocket || ttsSocket.readyState !== WebSocket.OPEN) {
-        ttsSocket = new WebSocket("http://localhost:8000/v1/ws/speech");
+        ttsSocket = new WebSocket("api/v1/ws/speech");
         ttsSocket.onopen = () => {
             console.log("TTS WebSocket connected");
             ttsSocket.send(JSON.stringify({
@@ -57,7 +57,7 @@ export default function useTTS(lang: string, beforeMsgSend: () => void) {
             setText(() => currText);
             sendTtsText(buffer, lang, beforeMsgSend);
         }
-    }, [text]);
+    }, [beforeMsgSend, lang, text]);
 
     return {
         text,

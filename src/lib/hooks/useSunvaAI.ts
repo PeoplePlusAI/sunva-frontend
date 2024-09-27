@@ -92,7 +92,7 @@ function startTranscriptionAndProcessing(
     try {
         if (transcribeAndProcessSocket)
             transcribeAndProcessSocket.close();
-        transcribeAndProcessSocket = new WebSocket('http://localhost:8000/v1/ws/transcription');
+        transcribeAndProcessSocket = new WebSocket('/api/v1/ws/transcription');
 
         transcribeAndProcessSocket.onopen = () => {
             console.log('Transcription and Processing WebSocket connected');
