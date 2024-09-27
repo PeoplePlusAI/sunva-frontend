@@ -1,4 +1,4 @@
-import "./login.css";
+import "./user.css";
 import {useState} from "react";
 import {toast} from "sonner";
 import {TPages} from "@/lib/types";

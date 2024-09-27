@@ -10,14 +10,13 @@ import {
     TrashIcon,
     UpAndDownArrow
 } from "@/components/Icons";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import MessagesList from "@/components/MessageList";
 import Link from "next/link";
 import useSunvaAI from "@/lib/hooks/useSunvaAI";
 import TTS from "@/components/tts/TTS";
 import ChangeLangBtn from "@/components/ChangeLangBtn";
 import {useSession} from "@/lib/context/sessionContext";
-import {redirect} from "next/navigation";
 import {SaveAndDeletePrompts} from "@/components/SaveAndDeletePrompts";
 
 
@@ -38,35 +37,7 @@ export default function Home() {
         setIsTTSOpen(false);
     };
 
-    // If use isn't logged then redirect to the home page
-    useEffect(() => {
-        try {
-            let stored = localStorage.getItem("user-session");
-            if (stored) {
-                let data = JSON.parse(atob(stored));
-                if (!data.email)
-                    redirect("/");
-            } else {
-                redirect("/");
-            }
-        } catch (e) {
-            redirect("/");
-        }
-    }, [session?.email]);
-
     return <main className="accessibility flex justify-between flex-col w-full h-full px-4 pt-3 pb-4">
-        <button onClick={() => {
-            fetch("/api/user/verify", {
-                method: 'GET',
-                credentials: 'include'
-            })
-                .then(res => res.json())
-                .then(data => console.log(data))
-                .catch(err => console.log(err));
-        }}>
-            Hello
-        </button>
-
         <div className="w-full h-[40px] flex items-center justify-between">
             <Link href="/home/saved" className="w-[24px]">
                 <NoteIcon/>

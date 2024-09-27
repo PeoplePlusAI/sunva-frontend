@@ -8,7 +8,6 @@ export default function useLangAvail() {
     useEffect(() => {
         fetch(`/api/v1/languages`)
             .then(res => {
-                console.log(res)
                 if (!res.ok) {
                     throw new Error('Network response was not ok');
                 }
