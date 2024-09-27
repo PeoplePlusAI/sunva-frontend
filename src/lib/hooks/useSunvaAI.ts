@@ -11,7 +11,7 @@ const audioQueue: Blob[] = [];
 let isSending = false;
 
 
-async function startRecording(setRecording: StateSetter<boolean>, setIsActive: StateSetter<TServerStates>, lang: string) {
+async function startRecording(setRecording: StateSetter<boolean>, setIsActive: StateSetter<TServerStates>, session: TSessionCtx) {
     console.group("Record Start")
     try {
         console.log('Starting recording...');
@@ -28,7 +28,7 @@ async function startRecording(setRecording: StateSetter<boolean>, setIsActive: S
             ondataavailable: (blob) => {
                 if (blob && blob.size > 0) {
                     audioQueue.push(blob);
-                    sendAudioChunks(lang);
+                    sendAudioChunks(session);
                 }
             },
         });
@@ -45,16 +45,16 @@ async function startRecording(setRecording: StateSetter<boolean>, setIsActive: S
     console.groupEnd();
 }
 
-function stopRecording(lang: string) {
+function stopRecording(session: TSessionCtx) {
     console.log('Stopping recording...');
     if (recorder && recorder.getState() !== 'inactive') {
         recorder.stopRecording(() => {
-            sendAudioChunks(lang);
+            sendAudioChunks(session);
         });
     }
 }
 
-async function sendAudioChunks(lang: string) {
+async function sendAudioChunks(session: TSessionCtx) {
     if (audioQueue.length > 0 && !isSending) {
         console.group("Send Audio");
 
@@ -65,12 +65,16 @@ async function sendAudioChunks(lang: string) {
 
         const arrayBuffer = await audioBlob.arrayBuffer();
         const base64String = arrayBufferToBase64(arrayBuffer);
-        const data = JSON.stringify({audio: base64String, language: lang || 'en'});
+        const data = JSON.stringify({
+            audio: base64String,
+            language: session?.lang || 'en',
+            user_id: session?.user_id || '0'
+        });
         console.log('Sending audio data to server');
         transcribeAndProcessSocket?.send(data);
         console.log('Sent audio data to server');
         isSending = false;
-        sendAudioChunks(lang);  // Continue sending remaining chunks
+        sendAudioChunks(session);  // Continue sending remaining chunks
         console.groupEnd();
     } else {
         console.warn('No audio chunks to send');
@@ -87,7 +91,7 @@ function startTranscriptionAndProcessing(
     setMessages: StateSetter<TMessage[]>,
     setIsRecording: StateSetter<boolean>,
     setIsActive: StateSetter<TServerStates>,
-    lang: string
+    session: TSessionCtx
 ) {
     try {
         if (transcribeAndProcessSocket)
@@ -96,7 +100,7 @@ function startTranscriptionAndProcessing(
 
         transcribeAndProcessSocket.onopen = () => {
             console.log('Transcription and Processing WebSocket connected');
-            startRecording(setIsRecording, setIsActive, lang);
+            startRecording(setIsRecording, setIsActive, session);
         };
 
         transcribeAndProcessSocket.onmessage = (event) => {
@@ -132,12 +136,13 @@ function startTranscriptionAndProcessing(
                 if (data.type === "concise" || data.type === "highlight") {
                     if (index !== -1) {
                         const updatedMessages = [...prevState];
-                        updatedMessages[index].summarized = data.text;
+                        updatedMessages[index].modified = data.text;
+                        updatedMessages[index].type = data.type;
                         return updatedMessages;
                     }
                     return [
                         ...prevState,
-                        {name: "Person 1", message: data.text, summarized: data.text, id: data.message_id}
+                        {name: "Person 1", message: data.text, modified: data.text, id: data.message_id}
                     ];
                 }
                 // Throw an error for any undefined data type.
@@ -153,7 +158,7 @@ function startTranscriptionAndProcessing(
                 toast.error("Connection to server closed unexpectedly");
             }
             console.log('Transcription and Processing WebSocket disconnected');
-            stopRecording(lang);
+            stopRecording(session);
             transcribeAndProcessSocket = null;
         };
 
@@ -171,12 +176,12 @@ function startTranscriptionAndProcessing(
     }
 }
 
-function stopTranscriptionAndProcessing(lang: string) {
+function stopTranscriptionAndProcessing(session: TSessionCtx) {
     if (transcribeAndProcessSocket) {
         transcribeAndProcessSocket.close();
         transcribeAndProcessSocket = null;
     }
-    stopRecording(lang);
+    stopRecording(session);
 }
 
 export default function useSunvaAI(session: TSessionCtx) {
@@ -199,11 +204,11 @@ export default function useSunvaAI(session: TSessionCtx) {
     }, []);
 
     function startRecording() {
-        startTranscriptionAndProcessing(setMessages, setIsRecording, setIsActive, session?.lang || "en");
+        startTranscriptionAndProcessing(setMessages, setIsRecording, setIsActive, session);
     }
 
     function stopRecording() {
-        stopTranscriptionAndProcessing(session?.lang || "en");
+        stopTranscriptionAndProcessing(session);
     }
 
     return {

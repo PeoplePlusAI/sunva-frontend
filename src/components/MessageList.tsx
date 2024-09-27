@@ -5,24 +5,24 @@ function Message({item}: { item: TMessage }) {
     const [showOriginal, setShowOriginal] = useState(true);
 
     useEffect(() => {
-        if (item.summarized)
+        if (item.modified)
             setShowOriginal(false);
-    }, [item.summarized]);
+    }, [item.modified]);
 
     return <>
         <div
-            className={` ${showOriginal ? '' : 'summarize'} message-box`}
+            className={` ${showOriginal ? '' : (item.type === 'concise' ? 'summarize' : 'highlight')} message-box`}
             data-type={item.name === "You" ? "You" : "Other"}
         >
             <label className={`font-bold block`}>{item.name}</label>
             <p className="h-auto" dangerouslySetInnerHTML={{
                 __html:
-                    item.summarized ?
-                        (showOriginal ? item.message : item.summarized) :
+                    item.modified ?
+                        (showOriginal ? item.message : item.modified) :
                         item.message
             }}></p>
         </div>
-        {item.summarized &&
+        {item.modified &&
             <div className="relative w-full text-right h-3">
                 <button className="view-og-btn absolute right-0 top-[-10px]" onClick={() => {
                     setShowOriginal(!showOriginal);

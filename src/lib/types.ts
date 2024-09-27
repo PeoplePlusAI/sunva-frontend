@@ -5,7 +5,8 @@ export type StateSetter<T> = React.Dispatch<React.SetStateAction<T>>;
 export type TMessage = {
     name: string;
     message: string;
-    summarized?: string;
+    modified?: string;
+    type?: "concise" | "highlight";
     id: string
 }
 
