@@ -13,7 +13,7 @@ export async function middleware(req: NextRequest) {
     }
 
     try {
-        const url = new URL('/user/verify', process.env.BACKEND);
+        const url = new URL('/user/verify', process.env.NEXT_PUBLIC_BACKEND);
         await fetch(url, {
             credentials: 'include',
             headers: {

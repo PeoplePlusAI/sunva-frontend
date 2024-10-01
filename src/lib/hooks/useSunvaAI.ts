@@ -96,7 +96,7 @@ function startTranscriptionAndProcessing(
     try {
         if (transcribeAndProcessSocket)
             transcribeAndProcessSocket.close();
-        transcribeAndProcessSocket = new WebSocket('/api/v1/ws/transcription');
+        transcribeAndProcessSocket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_BACKEND}/v1/ws/transcription`);
 
         transcribeAndProcessSocket.onopen = () => {
             console.log('Transcription and Processing WebSocket connected');
@@ -190,7 +190,7 @@ export default function useSunvaAI(session: TSessionCtx) {
     const [messages, setMessages] = useState<TMessage[]>([]);
 
     useEffect(() => {
-        fetch(`api/is-alive`, {
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND}/is-alive`, {
             headers: {},
             mode: "no-cors"
         })

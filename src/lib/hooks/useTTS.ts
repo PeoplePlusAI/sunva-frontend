@@ -3,9 +3,12 @@ import {useEffect, useState} from "react";
 function sendTtsText(text: string, lang: string, beforeMsgSend: () => void) {
     beforeMsgSend();
     let ttsSocket: WebSocket;
+
+    console.log(process.env.NEXT_PUBLIC_WS_BACKEND);
+
     // @ts-ignore
     if (!ttsSocket || ttsSocket.readyState !== WebSocket.OPEN) {
-        ttsSocket = new WebSocket("api/v1/ws/speech");
+        ttsSocket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_BACKEND}/v1/ws/speech`);
         ttsSocket.onopen = () => {
             console.log("TTS WebSocket connected");
             ttsSocket.send(JSON.stringify({

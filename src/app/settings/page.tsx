@@ -5,7 +5,7 @@ import {toast} from "sonner";
 import {LocalStoreKey} from "@/lib/data";
 
 
-export default function Chats() {
+export default function Settings() {
     const router = useRouter();
 
     return <section className="accessibility flex flex-col h-full w-full">
@@ -41,7 +41,7 @@ export default function Chats() {
                 className="bg-red-300 px-2 py-1 w-[80px] rounded border-2 border-red-400"
                 onClick={() => {
                     localStorage.removeItem("user-session");
-                    fetch('/api/user/logout', {
+                    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/user/logout`, {
                         method: 'POST'
                     })
                         .then(res => res.json())
