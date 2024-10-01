@@ -1,12 +1,12 @@
 "use client";
 
 import {useCallback} from "react";
-import Login from "@/components/login/Login";
+import Login from "@/components/user/Login";
 import SelectLanguage from "@/components/SelectLanguage";
 import TextSize from "@/components/TextSize";
 import {TPages} from "@/lib/types";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
-import Signup from "@/components/login/Signup";
+import Signup from "@/components/user/Signup";
 
 
 function ShowPage({currPage, pageSetter}: { currPage: TPages, pageSetter: (value: TPages) => void }) {

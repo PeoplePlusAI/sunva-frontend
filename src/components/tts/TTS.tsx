@@ -1,6 +1,6 @@
 import "./style.css"
 import {memo, useEffect, useRef} from "react";
-import useTTS from "@/components/tts/useTTS";
+import useTTS from "@/lib/hooks/useTTS";
 import {SendIcon} from "@/components/Icons";
 import {toast} from "sonner";
 import {StateSetter, TMessage} from "@/lib/types";

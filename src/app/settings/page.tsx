@@ -1,9 +1,11 @@
 "use client";
 
 import {useRouter} from "next/navigation";
+import {toast} from "sonner";
+import {LocalStoreKey} from "@/lib/data";
 
 
-export default function Chats() {
+export default function Settings() {
     const router = useRouter();
 
     return <section className="accessibility flex flex-col h-full w-full">
@@ -38,9 +40,20 @@ export default function Chats() {
                 Logout from account <button
                 className="bg-red-300 px-2 py-1 w-[80px] rounded border-2 border-red-400"
                 onClick={() => {
-                    console.log("Logging out");
                     localStorage.removeItem("user-session");
-                    router.replace("/")
+                    fetch(`${process.env.NEXT_PUBLIC_BACKEND}/user/logout`, {
+                        method: 'POST'
+                    })
+                        .then(res => res.json())
+                        .then(() => {
+                            localStorage.removeItem(LocalStoreKey);
+                            toast.success("Logged out successfully");
+                            router.push("/?page=login");
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            toast.error("Failed to logout")
+                        })
                 }}
             >Logout</button>
             </div>

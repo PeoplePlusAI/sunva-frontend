@@ -83,11 +83,11 @@
     white-space: normal; /* allows wrapping of text */
 }
 
-.summarize {
+.summarize , .highlight {
     position: relative;
 }
 
-.summarize::after {
+.summarize::after , .highlight::after {
     content: 'Summarized';
     position: absolute;
     top: 0;
@@ -97,6 +97,10 @@
     border-radius: 0 0 0 5px;
     padding: 1px 10px;
     font-size: 13px;
+}
+
+.highlight::after {
+    content: 'Highlighted';
 }
 
 .view-og-btn {

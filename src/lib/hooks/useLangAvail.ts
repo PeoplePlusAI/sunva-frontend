@@ -6,9 +6,8 @@ export default function useLangAvail() {
     const [langList, setLangList] = useState<string[]>(['en']);
 
     useEffect(() => {
-        fetch(`/api/v1/languages`)
+        fetch(`${process.env.NEXT_PUBLIC_BACKEND}/v1/languages`)
             .then(res => {
-                console.log(res)
                 if (!res.ok) {
                     throw new Error('Network response was not ok');
                 }

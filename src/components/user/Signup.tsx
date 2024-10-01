@@ -1,4 +1,4 @@
-import "./login.css";
+import "./user.css";
 import {useState} from "react";
 import {toast} from "sonner";
 import {TPages} from "@/lib/types";
@@ -38,7 +38,7 @@ export default function Signup({pageSetter}: { pageSetter: (val: TPages) => void
                     return;
                 }
 
-                fetch('/api/user/login', {
+                fetch(`${process.env.NEXT_PUBLIC_BACKEND}/user/register`, {
                     method: 'POST',
                     headers: {'Content-Type': ''},
                     body: JSON.stringify({

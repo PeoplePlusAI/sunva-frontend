@@ -14,8 +14,10 @@ person while having the communication.
     > The project uses `pnpm` as the package manager, but any of them can be used.
 3. Create `.env.local` file in the root of the project and add the following environment variables:
     ```env
-   BACKEND=http://localhost:8000
+   NEXT_PUBLIC_BACKEND=http://localhost:8000
+   NEXT_PUBLIC_WS_BACKEND=ws://localhost:8000
     ```
+   > The `NEXT_PUBLIC_BACKEND` and `NEXT_PUBLIC_WS_BACKEND` are the URLs of the backend server, it shouldn't end with '/'
    Change the value to the desired backend URL.
 4. The to start the development server, run the following command:
     ```bash
